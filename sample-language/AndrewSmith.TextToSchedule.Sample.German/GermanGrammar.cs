@@ -11,6 +11,9 @@ using AndrewSmith.Quartz.TextToSchedule.Util;
 
 namespace AndrewSmith.Quartz.TextToSchedule.Grammars
 {
+    //warning: I do not know the German language.
+    //I put most of this together playing with online translators
+
     public class GermanGrammar : IGrammar
     {
         //public static readonly string SPACE = @"\ ";
