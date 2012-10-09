@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{058CF660-BB84-4B39-BAE5-9EBE0488F107}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndrewSmith.Quartz.TextToSchedule", "src\AndrewSmith.Quartz.TextToSchedule\AndrewSmith.Quartz.TextToSchedule.csproj", "{E58DE5CF-B066-40C4-AAA8-88620D91DE9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndrewSmith.Quartz.TextToSchedule.Test", "test\AndrewSmith.Quartz.TextToSchedule.Test\AndrewSmith.Quartz.TextToSchedule.Test.csproj", "{9782FEA1-FC28-4058-B4FC-30F980DAC7FB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{00737B36-5FD1-4D63-961D-7B9EA960D440}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchedulerExaminer", "testapps\SchedulerExaminer\SchedulerExaminer.csproj", "{552C08EB-A27F-467F-BA6A-33066C19BAFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchedulerJobExecution", "testapps\SchedulerJobExecution\SchedulerJobExecution.csproj", "{F8DA2EF5-17D9-481A-AFB4-9FA068F1ECE0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleLanguage", "SampleLanguage", "{78484D55-ED58-48E9-A3D5-313DDC06D233}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndrewSmith.Quartz.TextToSchedule.Sample.German", "sample-language\AndrewSmith.TextToSchedule.Sample.German\AndrewSmith.Quartz.TextToSchedule.Sample.German.csproj", "{B7DF7106-188E-43E5-8C31-C384A415B086}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E58DE5CF-B066-40C4-AAA8-88620D91DE9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E58DE5CF-B066-40C4-AAA8-88620D91DE9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E58DE5CF-B066-40C4-AAA8-88620D91DE9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E58DE5CF-B066-40C4-AAA8-88620D91DE9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9782FEA1-FC28-4058-B4FC-30F980DAC7FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9782FEA1-FC28-4058-B4FC-30F980DAC7FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9782FEA1-FC28-4058-B4FC-30F980DAC7FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9782FEA1-FC28-4058-B4FC-30F980DAC7FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{552C08EB-A27F-467F-BA6A-33066C19BAFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{552C08EB-A27F-467F-BA6A-33066C19BAFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{552C08EB-A27F-467F-BA6A-33066C19BAFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{552C08EB-A27F-467F-BA6A-33066C19BAFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8DA2EF5-17D9-481A-AFB4-9FA068F1ECE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8DA2EF5-17D9-481A-AFB4-9FA068F1ECE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8DA2EF5-17D9-481A-AFB4-9FA068F1ECE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8DA2EF5-17D9-481A-AFB4-9FA068F1ECE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7DF7106-188E-43E5-8C31-C384A415B086}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7DF7106-188E-43E5-8C31-C384A415B086}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7DF7106-188E-43E5-8C31-C384A415B086}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7DF7106-188E-43E5-8C31-C384A415B086}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9782FEA1-FC28-4058-B4FC-30F980DAC7FB} = {058CF660-BB84-4B39-BAE5-9EBE0488F107}
+		{552C08EB-A27F-467F-BA6A-33066C19BAFD} = {00737B36-5FD1-4D63-961D-7B9EA960D440}
+		{F8DA2EF5-17D9-481A-AFB4-9FA068F1ECE0} = {00737B36-5FD1-4D63-961D-7B9EA960D440}
+		{B7DF7106-188E-43E5-8C31-C384A415B086} = {78484D55-ED58-48E9-A3D5-313DDC06D233}
+	EndGlobalSection
+EndGlobal
