@@ -23,7 +23,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
         string Expression2 { get; }
 
         /// <summary>
-        /// //[every|on] (date) [time]
+        /// [every|on] (date) [time]
         /// </summary>
         string Expression3 { get; }
     }

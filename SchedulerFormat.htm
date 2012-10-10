@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TextToSchedule Scheduler Format</title>
+
+    <style>
+        pre
+        {
+            border: solid 1px #bbb;
+            padding: 5px;
+            color: #070;
+            font-size: 18px;
+        }
+        code
+        {
+            font-family: 'Courier New', monospace;
+            color: #900;
+        }
+
+        ul.example
+        {
+            padding: 0;
+            border: solid 1px #bbb;
+            background-color: #ddd;
+        }
+        ul.example li
+        {
+            list-style: none;
+            font-family: 'Courier New', monospace;
+            padding: 5px;
+            margin: 0;
+        }
+        hr
+        {
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Scheduler Format</h2>
+
+    <p>Currently the schedule support 3 major formats.</p>
+
+
+    <pre>"every" [n] (sec|min|hour) ["on" weekdayspec] ["of" monthspec] [time]</pre>
+    <p>Where:</p>
+    <ul>
+        <li><i>N</i>
+             is a numeric amount
+        </li>
+        <li><i>(sec|min|hour)</i> 
+            you can use sec, second, seconds or just s.
+        </li>
+        <li>
+            <i>weekdayspec</i> 
+            specifies a list of the day of week names in full or abberviated. 
+            (You may use <code>weekday</code> or <code>weekdays</code> to specifiy Monday-Friday. You may use <code>weekend</code> or <code>weekends</code> to specify sat,sun.)
+        </li>
+        <li><i>time</i>
+            is a single time or a time range. 
+            time ranges are specified using the <code>"from" (time) "to" (time)</code> clause. 
+            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm)
+        </li>
+    </ul>
+    <p>Examples:</p>
+    <ul class="example">
+        <li>every second</li>
+        <li>every 30 minutes</li>
+        <li>every 3 hours on Monday</li>
+        <li>every 30 seconds on Monday through Friday at 9:00 am</li>
+        <li>every 2 hours on Friday from 9:30 am to 5:30 pm</li>
+    </ul>
+
+
+    <hr />
+
+
+    <pre>("every"|ordinal) (day of week) ["of" (month)] [time]</pre>
+    <p>Where:</p>
+    <ul>
+        <li><i>ordinal</i> is an ordinal value of 1st, 2nd, 3rd, 4th, or 5th value. 
+            (You can also speicfy the full word such as <code>first</code> instead of <code>1st</code>.)
+        </li>
+        <li>
+            <i>day of week</i> 
+            is a list or range of days of weeks.You can use the word <code>day</code> to mean all days of the week.
+            (You may use <code>weekday</code> or <code>weekdays</code> to specifiy Monday-Friday. You may use <code>weekend</code> or <code>weekends</code> to specify sat,sun.)
+        </li>
+        <li><i>month</i> is a list or range of month names. (You can use the word <code>month</code> to specify all months).</li>
+        <li><i>time</i> is a single value specified as a time, can be in 12 hour or 24 hour format
+            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm)
+        </li>
+    </ul>
+    <p>Examples:</p>
+    <ul class="example">
+        <li>every Friday at 6:30 am</li>
+        <li>every mon,wed,fri at 9pm</li>
+        <li>2nd,4th Friday of month at 17:00</li>
+        <li>first and third Monday of Jan,Feb,Mar</li>
+        <li>last day of month at 9:30 am</li>
+    </ul>
+
+    <hr />
+
+    <pre>["every"|on] (date) [time]</pre>
+    <p>Where:</p>
+    <ul>
+        <li><i>date</i> 
+            is a date the is specified as a month then day, with the year as optional.
+            (You can separate the date with or without commas. You may append a st,nd,rd, or th at the end of the day, such as <code>December 25th</code> or <code>December 3rd</code>.)
+        </li>
+        <li><i>time</i> is a single value specified as a time, can be in 12 hour or 24 hour format
+            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm)
+        </li>
+    </ul>
+    <p>Examples:</p>
+    <ul class="example">
+        <li>on April 1st, at noon</li>
+        <li>Jan 1st at midnight</li>
+        <li>May 5, 2020 at 4pm</li>
+        <li>every Dec 3rd</li>
+        <li>March 2nd at 3:30 pm</li>
+    </ul>
+    
+
+</body>
+</html>
