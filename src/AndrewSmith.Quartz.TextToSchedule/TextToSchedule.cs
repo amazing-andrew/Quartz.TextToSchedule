@@ -81,29 +81,25 @@ namespace AndrewSmith.Quartz.TextToSchedule
         {
             text = GrammarHelper.Normalize(text);
 
-            TextToScheduleResults register = new TextToScheduleResults();
+            TextToScheduleResults results = new TextToScheduleResults();
             bool matched = false;
 
-            if (ExecuteMatch(Grammar.Expression1, text, register, Expression1Handler))
+            if (ExecuteMatch(Grammar.Expression1, text, results, Expression1Handler))
+            {
+                matched = true;
+            }
+            else if (ExecuteMatch(Grammar.Expression2, text, results, Expression2Handler))
+            {
+                matched = true;
+            }
+            else if (ExecuteMatch(Grammar.Expression3, text, results, Expression3Handler))
             {
                 matched = true;
             }
 
-            if (ExecuteMatch(Grammar.Expression2, text, register, Expression2Handler))
-            {
-                matched = true;
-            }
-
-            if (ExecuteMatch(Grammar.Expression3, text, register, Expression3Handler))
-            {
-                matched = true;
-            }
 
             if (matched)
-            {
-                return register;
-            }
-                
+                return results;   
             else
                 return null;
         }
