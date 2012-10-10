@@ -101,7 +101,6 @@ namespace AndrewSmith.Quartz.TextToSchedule
 
             if (matched)
             {
-                Console.WriteLine("Matched: {0}", text);
                 return register;
             }
                 

@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F8DA2EF5-17D9-481A-AFB4-9FA068F1ECE0}</ProjectGuid>
+    <ProjectGuid>{936AB2C1-D3F2-4E5A-850A-0B00DF121DDA}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SchedulerJobExecution</RootNamespace>
-    <AssemblyName>SchedulerJobExecution</AssemblyName>
+    <RootNamespace>ExampleApp</RootNamespace>
+    <AssemblyName>ExampleApp</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -53,16 +52,12 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SampleJob.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\sample-language\AndrewSmith.TextToSchedule.Sample.German\AndrewSmith.Quartz.TextToSchedule.Sample.German.csproj">
-      <Project>{b7df7106-188e-43e5-8c31-c384a415b086}</Project>
-      <Name>AndrewSmith.Quartz.TextToSchedule.Sample.German</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\AndrewSmith.Quartz.TextToSchedule\AndrewSmith.Quartz.TextToSchedule.csproj">
       <Project>{e58de5cf-b066-40c4-aaa8-88620d91de9e}</Project>
       <Name>AndrewSmith.Quartz.TextToSchedule</Name>

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SchedulerJobExecution")]
+[assembly: AssemblyTitle("ExampleApp")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SchedulerJobExecution")]
+[assembly: AssemblyProduct("ExampleApp")]
 [assembly: AssemblyCopyright("Copyright ©  2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("b7b25835-48f6-46bb-879a-c1d0316deb5f")]
+[assembly: Guid("b65f5ec1-97a3-4e62-be38-126fecbab00c")]
 
 // Version information for an assembly consists of the following four values:
 //
