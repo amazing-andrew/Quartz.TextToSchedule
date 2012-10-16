@@ -13,24 +13,26 @@ namespace AndrewSmith.Quartz.TextToSchedule.Calendars
     /// A custom calendar impl. I built this because the WeeklyCalendar looked at the Days of the Week according to 
     /// UTC time, which could be on a different day of week than the local time.
     /// </summary>
-     [Serializable]
+    [Serializable]
     public class LocalWeeklyCalendar : WeeklyCalendar
     {
+        private bool excludeAll = false;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalWeeklyCalendar" /> class.
         /// </summary>
-        public LocalWeeklyCalendar () { }
+        public LocalWeeklyCalendar() { excludeAll = AreAllDaysExcluded(); }
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalWeeklyCalendar" /> class.
         /// </summary>
         /// <param name="baseCalendar">The base calendar.</param>
-        public LocalWeeklyCalendar (ICalendar baseCalendar) : base(baseCalendar) { }
+        public LocalWeeklyCalendar(ICalendar baseCalendar) : base(baseCalendar) { excludeAll = AreAllDaysExcluded(); }
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalWeeklyCalendar" /> class.
         /// </summary>
         /// <param name="info">The info.</param>
         /// <param name="context">The context.</param>
-        public LocalWeeklyCalendar(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        public LocalWeeklyCalendar(SerializationInfo info, StreamingContext context) : base(info, context) { excludeAll = AreAllDaysExcluded(); }
 
         /// <summary>
         /// Determine whether the given time (in milliseconds) is 'included' by the
@@ -43,8 +45,19 @@ namespace AndrewSmith.Quartz.TextToSchedule.Calendars
         /// <returns></returns>
         public override bool IsTimeIncluded(DateTimeOffset timeUtc)
         {
-            DateTimeOffset localTime = timeUtc.ToLocalTime();
-            return base.IsTimeIncluded(localTime);
+            if (excludeAll)
+            {
+                return false;
+            }
+
+            // Test the base calendar first. Only if the base calendar not already
+            // excludes the time/date, continue evaluating this calendar instance.
+            if (!base.IsTimeIncluded(timeUtc))
+            {
+                return false;
+            }
+
+            return !(IsDayExcluded(timeUtc.DayOfWeek));
         }
 
         /// <summary>
@@ -86,6 +99,12 @@ namespace AndrewSmith.Quartz.TextToSchedule.Calendars
             }
 
             return d;
+        }
+
+        public override void SetDayExcluded(DayOfWeek wday, bool exclude)
+        {
+            base.SetDayExcluded(wday, exclude);
+            excludeAll = AreAllDaysExcluded();
         }
     }
 }

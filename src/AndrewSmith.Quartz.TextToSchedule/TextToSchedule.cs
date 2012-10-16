@@ -134,7 +134,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
                 calendar = BuildCalendarOnDayOfWeek(calendar, dayOfWeekSpecs);
             }
 
-            //MONTH SPECS (I had to put this after the day of week, because chaining the calendar's didn't seem to compute properly)
+            //MONTH SPECS
             if (monthSpecs != null)
             {
                 calendar = BuildCalendarOnMonths(calendar, monthSpecs);
@@ -399,7 +399,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
         /// </summary>
         /// <param name="dayofWeekSpecs">The day of week specs.</param>
         /// <returns></returns>
-        private WeeklyCalendar BuildCalendarOnDayOfWeek(ICalendar baseCalendar, string[] dayofWeekSpecs)
+        private ICalendar BuildCalendarOnDayOfWeek(ICalendar baseCalendar, string[] dayofWeekSpecs)
         {
             //create calendar and exclude all days
             //WeeklyCalendar calendar = new WeeklyCalendar();
@@ -425,44 +425,44 @@ namespace AndrewSmith.Quartz.TextToSchedule
         /// <summary>
         /// Builds a <see cref="DailyCalendar"/> on the given allowed hours to run.
         /// </summary>
-        /// <param name="fromTime">From time.</param>
-        /// <param name="toTime">To time.</param>
+        /// <param name="fromTimeString">From time.</param>
+        /// <param name="toTimeString">To time.</param>
         /// <returns></returns>
-        private DailyCalendar BuildCalendarOnTimeRange(ICalendar baseCalendar, string fromTime, string toTime)
+        private ICalendar BuildCalendarOnTimeRange(ICalendar baseCalendar, string fromTimeString, string toTimeString)
         {
-            DateTime? dFromTime = GrammarHelper.GetTimeFromTimeString(fromTime);
-            DateTime? dToTime = GrammarHelper.GetTimeFromTimeString(toTime);
+            DateTime? dFromTime = GrammarHelper.GetTimeFromTimeString(fromTimeString);
+            DateTime? dToTime = GrammarHelper.GetTimeFromTimeString(toTimeString);
 
-            DateTime fromUtc = dFromTime.Value.ToUniversalTime();
-            DateTime toUtc = dToTime.Value.ToUniversalTime();
+            DateTime fromTime = dFromTime.Value;
+            DateTime toTime = dToTime.Value;
             
             //adjust the utc month,day,year to match each other
-            toUtc = new DateTime(fromUtc.Year, fromUtc.Month, fromUtc.Day, toUtc.Hour, toUtc.Minute, toUtc.Second, toUtc.Millisecond);
+            toTime = new DateTime(fromTime.Year, fromTime.Month, fromTime.Day, toTime.Hour, toTime.Minute, toTime.Second, toTime.Millisecond);
 
-            DailyCalendar calendar = null;
+            LocalDailyCalendar calendar = null;
 
             //if the to time is lower than from
-            if (toUtc < fromUtc)
+            if (toTime < fromTime)
             {
                 //switch the variables
                 if (baseCalendar != null)
-                    calendar = new DailyCalendar(baseCalendar, toUtc, fromUtc);
+                    calendar = new LocalDailyCalendar(baseCalendar, toTime, fromTime);
                 else
-                    calendar = new DailyCalendar(toUtc, fromUtc);
+                    calendar = new LocalDailyCalendar(toTime, fromTime);
             }
             else
             {
                 //check to see if they are the same
                 //TODO: do something about this hacking the extra second
-                if (fromUtc.Equals(toUtc))
+                if (fromTime.Equals(toTime))
                 {
-                    toUtc = toUtc.AddSeconds(1); 
+                    toTime = toTime.AddSeconds(1); 
                 }
 
                 if (baseCalendar != null)
-                    calendar = new DailyCalendar(baseCalendar, fromUtc, toUtc);
+                    calendar = new LocalDailyCalendar(baseCalendar, fromTime, toTime);
                 else
-                    calendar = new DailyCalendar(fromUtc, toUtc);
+                    calendar = new LocalDailyCalendar(fromTime, toTime);
 
                 calendar.InvertTimeRange = true; //turn this into an inclusive range
             }

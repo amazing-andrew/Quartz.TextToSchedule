@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Calendars\LocalDailyCalendar.cs" />
     <Compile Include="Calendars\LocalWeeklyCalendar.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Grammars\EnglishGrammarHelper.cs" />
