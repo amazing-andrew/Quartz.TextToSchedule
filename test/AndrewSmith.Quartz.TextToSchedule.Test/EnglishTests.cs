@@ -69,7 +69,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
 
 
             TestHelper.AssertHasTimeIntervalOf(trigger, TimeSpan.FromHours(1));
-            TestHelper.AssertHasCalendarOfType<WeeklyCalendar>(group);
+            TestHelper.AssertHasCalendarOfType<LocalWeeklyCalendar>(group);
 
             TestHelper.AssertWeeklyCalendarHasDayIncluded(group, DayOfWeek.Monday);
 
@@ -92,7 +92,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var trigger = group.TriggerBuilder.Build();
 
             TestHelper.AssertHasTimeIntervalOf(trigger, TimeSpan.FromHours(1));
-            TestHelper.AssertHasCalendarOfType<WeeklyCalendar>(group);
+            TestHelper.AssertHasCalendarOfType<LocalWeeklyCalendar>(group);
 
             TestHelper.AssertWeeklyCalendarHasDayIncluded(group, DayOfWeek.Monday);
             TestHelper.AssertWeeklyCalendarHasDayIncluded(group, DayOfWeek.Tuesday);
@@ -115,7 +115,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var trigger = group.TriggerBuilder.Build();
 
             TestHelper.AssertHasTimeIntervalOf(trigger, TimeSpan.FromHours(1));
-            TestHelper.AssertHasCalendarOfType<WeeklyCalendar>(group);
+            TestHelper.AssertHasCalendarOfType<LocalWeeklyCalendar>(group);
 
             TestHelper.AssertWeeklyCalendarHasDayExcluded(group, DayOfWeek.Monday);
             TestHelper.AssertWeeklyCalendarHasDayExcluded(group, DayOfWeek.Tuesday);

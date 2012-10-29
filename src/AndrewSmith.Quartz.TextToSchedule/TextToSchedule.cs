@@ -395,7 +395,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
         }
         
         /// <summary>
-        /// Builds a <see cref="WeeklyCalendar"/> based on the given allowed days of weeks.
+        /// Builds a <see cref="LocalWeeklyCalendar"/> based on the given allowed days of weeks.
         /// </summary>
         /// <param name="dayofWeekSpecs">The day of week specs.</param>
         /// <returns></returns>

@@ -69,14 +69,14 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
 
         public static void AssertWeeklyCalendarHasDayIncluded(RegisterGroup group, DayOfWeek includedDay)
         {
-            var weeklyCalendar = FindCalendarOfType<WeeklyCalendar>(group);
+            var weeklyCalendar = FindCalendarOfType<LocalWeeklyCalendar>(group);
             Assert.IsTrue(!weeklyCalendar.IsDayExcluded(includedDay),
                 "day of week of {0} was expected to be included in the calendar but wasn't.",
                 includedDay);
         }
         public static void AssertWeeklyCalendarHasDayExcluded(RegisterGroup group, DayOfWeek includedDay)
         {
-            var weeklyCalendar = FindCalendarOfType<WeeklyCalendar>(group);
+            var weeklyCalendar = FindCalendarOfType<LocalWeeklyCalendar>(group);
             Assert.IsTrue(weeklyCalendar.IsDayExcluded(includedDay),
                 "day of week of {0} was expected to be excluded in the calendar but wasn't.",
                 includedDay);
