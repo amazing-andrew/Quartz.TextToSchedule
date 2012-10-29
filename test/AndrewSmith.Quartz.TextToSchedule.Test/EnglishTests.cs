@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AndrewSmith.Quartz.TextToSchedule;
 using Quartz;
 using Quartz.Impl.Calendar;
+using AndrewSmith.Quartz.TextToSchedule.Calendars;
 
 namespace AndrewSmith.Quartz.TextToSchedule.Test
 {
@@ -137,7 +138,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var trigger = group.TriggerBuilder.Build();
 
             TestHelper.AssertHasTimeIntervalOf(trigger, TimeSpan.FromHours(2));
-            TestHelper.AssertHasCalendarOfType<DailyCalendar>(group);
+            TestHelper.AssertHasCalendarOfType<LocalDailyCalendar>(group);
         }
 
         [TestMethod]
@@ -151,8 +152,8 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var trigger = group.TriggerBuilder.Build();
 
             TestHelper.AssertHasTimeIntervalOf(trigger, TimeSpan.FromSeconds(10));
-            TestHelper.AssertHasCalendarOfType<WeeklyCalendar>(group);
-            TestHelper.AssertHasCalendarOfType<DailyCalendar>(group);
+            TestHelper.AssertHasCalendarOfType<LocalWeeklyCalendar>(group);
+            TestHelper.AssertHasCalendarOfType<LocalDailyCalendar>(group);
         }
 
         [TestMethod]
@@ -162,10 +163,8 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var results = tts.Parse(text);
 
             Assert.AreEqual(1, results.RegisterGroups.Count);
-            var group = results.RegisterGroups[0];
-            var trigger = group.TriggerBuilder.Build();
 
-            TestHelper.AssertHasCronExpression(trigger, "0 0 0 ? JAN FRI#2");
+            TestHelper.AssertHasCronExpression(results, "0 0 0 ? JAN FRI#2");
         }
 
         [TestMethod]
@@ -175,10 +174,8 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var results = tts.Parse(text);
 
             Assert.AreEqual(1, results.RegisterGroups.Count);
-            var group = results.RegisterGroups[0];
-            var trigger = group.TriggerBuilder.Build();
 
-            TestHelper.AssertHasCronExpression(trigger, "0 0 16 ? DEC MON");
+            TestHelper.AssertHasCronExpression(results, "0 0 16 ? DEC MON");
         }
 
         [TestMethod]
@@ -188,10 +185,8 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var results = tts.Parse(text);
 
             Assert.AreEqual(1, results.RegisterGroups.Count);
-            var group = results.RegisterGroups[0];
-            var trigger = group.TriggerBuilder.Build();
 
-            TestHelper.AssertHasCronExpression(trigger, "0 0 0 L * ?");
+            TestHelper.AssertHasCronExpression(results, "0 0 0 L * ?");
         }
 
         [TestMethod]
@@ -201,10 +196,8 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var results = tts.Parse(text);
 
             Assert.AreEqual(1, results.RegisterGroups.Count);
-            var group = results.RegisterGroups[0];
-            var trigger = group.TriggerBuilder.Build();
 
-            TestHelper.AssertHasCronExpression(trigger, "0 0 0 1 * ?");
+            TestHelper.AssertHasCronExpression(results, "0 0 0 1 * ?");
         }
 
         [TestMethod]
@@ -214,10 +207,8 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var results = tts.Parse(text);
 
             Assert.AreEqual(1, results.RegisterGroups.Count);
-            var group = results.RegisterGroups[0];
-            var trigger = group.TriggerBuilder.Build();
 
-            TestHelper.AssertHasCronExpression(trigger, "0 0 0 L JAN,FEB,DEC ?");
+            TestHelper.AssertHasCronExpression(results, "0 0 0 L JAN,FEB,DEC ?");
         }
 
         [TestMethod]
@@ -227,19 +218,13 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var results = tts.Parse(text);
 
             Assert.AreEqual(6, results.RegisterGroups.Count);
-            var trigger1 = results.RegisterGroups[0].TriggerBuilder.Build();
-            var trigger2 = results.RegisterGroups[1].TriggerBuilder.Build();
-            var trigger3 = results.RegisterGroups[2].TriggerBuilder.Build();
-            var trigger4 = results.RegisterGroups[3].TriggerBuilder.Build();
-            var trigger5 = results.RegisterGroups[4].TriggerBuilder.Build();
-            var trigger6 = results.RegisterGroups[5].TriggerBuilder.Build();
 
-            TestHelper.AssertHasCronExpression(trigger1, "0 0 16 ? JAN,FEB,DEC MON#1");
-            TestHelper.AssertHasCronExpression(trigger2, "0 0 16 ? JAN,FEB,DEC TUE#1");
-            TestHelper.AssertHasCronExpression(trigger3, "0 0 16 ? JAN,FEB,DEC WED#1");
-            TestHelper.AssertHasCronExpression(trigger4, "0 0 16 ? JAN,FEB,DEC MONL");
-            TestHelper.AssertHasCronExpression(trigger5, "0 0 16 ? JAN,FEB,DEC TUEL");
-            TestHelper.AssertHasCronExpression(trigger6, "0 0 16 ? JAN,FEB,DEC WEDL");
+            TestHelper.AssertHasCronExpression(results, "0 0 16 ? JAN,FEB,DEC MON#1");
+            TestHelper.AssertHasCronExpression(results, "0 0 16 ? JAN,FEB,DEC TUE#1");
+            TestHelper.AssertHasCronExpression(results, "0 0 16 ? JAN,FEB,DEC WED#1");
+            TestHelper.AssertHasCronExpression(results, "0 0 16 ? JAN,FEB,DEC MONL");
+            TestHelper.AssertHasCronExpression(results, "0 0 16 ? JAN,FEB,DEC TUEL");
+            TestHelper.AssertHasCronExpression(results, "0 0 16 ? JAN,FEB,DEC WEDL");
         }
     }
 }

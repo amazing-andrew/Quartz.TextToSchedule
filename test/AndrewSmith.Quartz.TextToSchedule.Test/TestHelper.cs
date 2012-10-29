@@ -7,18 +7,40 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quartz;
 using Quartz.Impl.Calendar;
 using Quartz.Spi;
+using AndrewSmith.Quartz.TextToSchedule.Calendars;
 
 namespace AndrewSmith.Quartz.TextToSchedule.Test
 {
     public class TestHelper
     {
-        public static void AssertHasCronExpression(ITrigger trigger, string cronExpression)
+        public static void AssertHasCronExpression(TextToScheduleResults results , string cronExpression)
         {
-            ICronTrigger cronTrigger = (ICronTrigger)trigger;
-            Assert.AreEqual(cronExpression, cronTrigger.CronExpressionString);
+            bool foundCronTrigger = false;
 
-            //return cronExpression == cronTrigger.CronExpressionString;
+            foreach (var g in results.RegisterGroups)
+            {
+                var trigger = g.TriggerBuilder.Build();
+
+                if (trigger is ICronTrigger)
+                {
+                    ICronTrigger cronTrigger = (ICronTrigger)trigger;
+                    if (cronExpression == cronTrigger.CronExpressionString)
+                    {
+                        foundCronTrigger = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!foundCronTrigger)
+                Assert.Fail(
+                    string.Format("Could not find cron string of {0}, in the list of found cron expressions ({1}).",
+                    cronExpression,
+                    string.Join(", ", results.RegisterGroups.Select(x => x.TriggerBuilder.Build()).OfType<ICronTrigger>().Select(x => x.CronExpressionString).ToList())));
         }
+
+
+
         public static void AssertHasTimeIntervalOf(ITrigger trigger, TimeSpan span)
         {
             ISimpleTrigger simpleTrigger = (ISimpleTrigger)trigger;
@@ -70,9 +92,10 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
 
             date = date.ToUniversalTime();
 
-            var dailyCal = FindCalendarOfType<DailyCalendar>(group);
+            var dailyCal = FindCalendarOfType<LocalDailyCalendar>(group);
             Assert.IsTrue(dailyCal.IsTimeIncluded(date), "{0} as expected to be included in the daily calendar but wasn't", date);
         }
+
         public static void AssertDailyCalendarIsTimeExcluded(RegisterGroup group, int hour, int minute, int sec)
         {
             DateTimeOffset date = DateTimeOffset.Now;
@@ -81,7 +104,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
 
             date = date.ToUniversalTime();
 
-            var dailyCal = FindCalendarOfType<DailyCalendar>(group);
+            var dailyCal = FindCalendarOfType<LocalDailyCalendar>(group);
             Assert.IsFalse(dailyCal.IsTimeIncluded(date), "{0} as expected to be excluded in the daily calendar but wasn't", date);
         }
 

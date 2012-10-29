@@ -71,19 +71,13 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             //there should be a group for each 
             //ordinal and day of week combination
             Assert.AreEqual(6, results.RegisterGroups.Count);
-            var trigger1 = results.RegisterGroups[0].TriggerBuilder.Build();
-            var trigger2 = results.RegisterGroups[1].TriggerBuilder.Build();
-            var trigger3 = results.RegisterGroups[2].TriggerBuilder.Build();
-            var trigger4 = results.RegisterGroups[3].TriggerBuilder.Build();
-            var trigger5 = results.RegisterGroups[4].TriggerBuilder.Build();
-            var trigger6 = results.RegisterGroups[5].TriggerBuilder.Build();
 
-            TestHelper.AssertHasCronExpression(trigger1, "0 0 17 ? MAR MON#2");
-            TestHelper.AssertHasCronExpression(trigger2, "0 0 17 ? MAR WED#2");
-            TestHelper.AssertHasCronExpression(trigger3, "0 0 17 ? MAR THU#2");
-            TestHelper.AssertHasCronExpression(trigger4, "0 0 17 ? MAR MON#3");
-            TestHelper.AssertHasCronExpression(trigger5, "0 0 17 ? MAR WED#3");
-            TestHelper.AssertHasCronExpression(trigger6, "0 0 17 ? MAR THU#3");
+            TestHelper.AssertHasCronExpression(results, "0 0 17 ? MAR MON#2");
+            TestHelper.AssertHasCronExpression(results, "0 0 17 ? MAR WED#2");
+            TestHelper.AssertHasCronExpression(results, "0 0 17 ? MAR THU#2");
+            TestHelper.AssertHasCronExpression(results, "0 0 17 ? MAR MON#3");
+            TestHelper.AssertHasCronExpression(results, "0 0 17 ? MAR WED#3");
+            TestHelper.AssertHasCronExpression(results, "0 0 17 ? MAR THU#3");
         }
 
         [TestMethod]
@@ -93,10 +87,8 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var results = tts.Parse(text);
 
             Assert.AreEqual(1, results.RegisterGroups.Count);
-            var group = results.RegisterGroups[0];
-            var trigger = group.TriggerBuilder.Build();
 
-            TestHelper.AssertHasCronExpression(trigger, "0 0 9 ? * MON");
+            TestHelper.AssertHasCronExpression(results, "0 0 9 ? * MON");
         }
 
         [TestMethod]
@@ -106,10 +98,8 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var results = tts.Parse(text);
 
             Assert.AreEqual(1, results.RegisterGroups.Count);
-            var group = results.RegisterGroups[0];
-            var trigger = group.TriggerBuilder.Build();
 
-            TestHelper.AssertHasCronExpression(trigger, "0 0 17 ? SEP,OCT,NOV MON#1");
+            TestHelper.AssertHasCronExpression(results, "0 0 17 ? SEP,OCT,NOV MON#1");
         }
 
         [TestMethod]
@@ -119,10 +109,8 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var results = tts.Parse(text);
 
             Assert.AreEqual(1, results.RegisterGroups.Count);
-            var group = results.RegisterGroups[0];
-            var trigger = group.TriggerBuilder.Build();
 
-            TestHelper.AssertHasCronExpression(trigger, "0 0 0 ? * *");
+            TestHelper.AssertHasCronExpression(results, "0 0 0 ? * *");
         }
 
         [TestMethod]
