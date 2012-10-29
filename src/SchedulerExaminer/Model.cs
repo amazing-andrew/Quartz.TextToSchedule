@@ -115,7 +115,7 @@ namespace SchedulerExaminer
 
                 foreach (var item in list.Take(MaxResultsToReturn))
                 {
-                    m.Triggers.Add(item.ToString("ddd, MM/dd/yyyy hh:mm:ss tt"));
+                    m.Triggers.Add(item.ToString("ddd, MM/dd/yyyy hh:mm:ss tt (zzz G\\MT)"));
                 }
             }
         }

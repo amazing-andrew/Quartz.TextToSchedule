@@ -32,25 +32,9 @@ namespace AndrewSmith.Quartz.TextToSchedule.Calendars
     /// specified time range each day.
     /// </summary>
     /// <remarks>
-    /// For example, you could use this calendar to
-    /// exclude business hours (8AM - 5PM) every day. Each <see cref="LocalDailyCalendar" />
-    /// only allows a single time range to be specified, and that time range may not
-    /// * cross daily boundaries (i.e. you cannot specify a time range from 8PM - 5AM).
-    /// If the property <see cref="invertTimeRange" /> is <see langword="false" /> (default),
-    /// the time range defines a range of times in which triggers are not allowed to
-    /// * fire. If <see cref="invertTimeRange" /> is <see langword="true" />, the time range
-    /// is inverted: that is, all times <i>outside</i> the defined time range
-    /// are excluded.
-    /// <para>
-    /// Note when using <see cref="LocalDailyCalendar" />, it behaves on the same principals
-    /// as, for example, WeeklyCalendar defines a set of days that are
-    /// excluded <i>every week</i>. Likewise, <see cref="LocalDailyCalendar" /> defines a
-    /// set of times that are excluded <i>every day</i>.
-    /// </para>
+    /// This is a special version of a DailyCalendar. This has been changed to only 
+    /// work with local time.
     /// </remarks>
-    /// <author>Mike Funk</author>
-    /// <author>Aaron Craven</author>
-    /// <author>Marko Lahma (.NET)</author>
     [Serializable]
     public class LocalDailyCalendar : BaseCalendar
     {
@@ -446,10 +430,10 @@ namespace AndrewSmith.Quartz.TextToSchedule.Calendars
                 GetTimeRangeEndingTimeUtc(timeUtc);
             if (!invertTimeRange)
             {
-                if ((timeUtc > startOfDayInMillis &&
-                     timeUtc < timeRangeStartingTimeInMillis) ||
-                    (timeUtc > timeRangeEndingTimeInMillis &&
-                     timeUtc < endOfDayInMillis))
+                if ((timeUtc >= startOfDayInMillis &&
+                     timeUtc <= timeRangeStartingTimeInMillis) ||
+                    (timeUtc >= timeRangeEndingTimeInMillis &&
+                     timeUtc <= endOfDayInMillis))
                 {
                     return true;
                 }
@@ -848,7 +832,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Calendars
         private static DateTimeOffset GetEndOfDay(DateTimeOffset time)
         {
             //DateTime endOfDay = new DateTime(time.Year, time.Month, time.Day, 23, 59, 59, 999);
-            DateTimeOffset endOfDay = new DateTimeOffset(time.Year, time.Month, time.Day, 23, 59, 59, time.Offset);
+            DateTimeOffset endOfDay = new DateTimeOffset(time.Year, time.Month, time.Day, 23, 59, 59, 999, time.Offset);
             return endOfDay;
         }
 
