@@ -1,4 +1,7 @@
-﻿using AndrewSmith.Quartz.TextToSchedule.Calendars;
+﻿#if CUSTOM
+using AndrewSmith.Quartz.TextToSchedule.Calendars;
+using AndrewSmith.Quartz.TextToSchedule.Triggers;
+#endif
 using AndrewSmith.Quartz.TextToSchedule.Grammars;
 using Quartz;
 using Quartz.Impl.Calendar;
@@ -97,7 +100,6 @@ namespace AndrewSmith.Quartz.TextToSchedule
                 matched = true;
             }
 
-
             if (matched)
                 return results;   
             else
@@ -111,9 +113,9 @@ namespace AndrewSmith.Quartz.TextToSchedule
         /// <param name="results">The results.</param>
         private void Expression1Handler(NameValueCollection nameValueCollection, TextToScheduleResults results)
         {
-            var amount = nameValueCollection["AMOUNT"];
-            var timeValue = nameValueCollection["TIMEVALUE"];
-            var startDate = nameValueCollection["DATESPEC"];
+            var amountString = nameValueCollection["AMOUNT"];
+            var intervalUnitString = nameValueCollection["INTERVALUNIT"];
+            var startDateString = nameValueCollection["DATESPEC"];
             
             var time = nameValueCollection["TIME"];
             var fromTime = nameValueCollection["FROMTIME"];
@@ -122,8 +124,6 @@ namespace AndrewSmith.Quartz.TextToSchedule
             var dayOfWeekSpecs = nameValueCollection.GetValues("DAYOFWEEK");
             var monthSpecs = nameValueCollection.GetValues("MONTH");
 
-
-            TimeSpan interval = BuildTimeInterval(timeValue, amount);
             DateTime? triggerStartTime = null;
 
             ICalendar calendar = null;
@@ -152,7 +152,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
                 DateTime? fromTimeStartDate = GrammarHelper.GetTimeFromTimeString(fromTime);
                 triggerStartTime = fromTimeStartDate;
             }
-            //is regualr time, process as single time provided
+            //is regular time, process as single time provided
             else if (time != null)
             {
                 DateTime? timeStartDate = GrammarHelper.GetTimeFromTimeString(time);
@@ -162,10 +162,15 @@ namespace AndrewSmith.Quartz.TextToSchedule
             //BUILD TRIGGER
             TriggerBuilder triggerBuilder = TriggerBuilder.Create();
 
-            SimpleScheduleBuilder simpleBuilder = SimpleScheduleBuilder.Create();
-            simpleBuilder.WithInterval(interval);
-            simpleBuilder.RepeatForever();
-            triggerBuilder.WithSchedule(simpleBuilder);
+            //uncomment to use simple builder
+            //SimpleScheduleBuilder simpleBuilder = SimpleScheduleBuilder.Create();
+            //simpleBuilder.WithInterval(interval);
+            //simpleBuilder.RepeatForever();
+            //triggerBuilder.WithSchedule(simpleBuilder);
+
+            //use custom calendar interval trigger
+            triggerBuilder.WithSchedule(CreateTriggerBasedOnAmountAndTime(amountString, intervalUnitString));
+
             
             //start on from time
             if (triggerStartTime != null)
@@ -363,36 +368,6 @@ namespace AndrewSmith.Quartz.TextToSchedule
         #endregion
 
         #region Calendar & Helper Methods
-
-        /// <summary>
-        /// Builds the time interval based on a time value and amount fields.
-        /// </summary>
-        /// <param name="timeValueString">The time value string.</param>
-        /// <param name="amount">The amount.</param>
-        /// <returns></returns>
-        private TimeSpan BuildTimeInterval(string timeValueString, string amount)
-        {
-            TimeValue timeValue = GrammarHelper.GetTimeValueFromString(timeValueString);
-            int iAmount = amount == null ? 1 : GrammarHelper.GetAmountValueFromString(amount); 
-            TimeSpan interval = new TimeSpan();
-
-            switch (timeValue)
-            {
-                case TimeValue.Seconds:
-                    interval = TimeSpan.FromSeconds(iAmount);
-                    break;
-                case TimeValue.Minutes:
-                    interval = TimeSpan.FromMinutes(iAmount);
-                    break;
-                case TimeValue.Hours:
-                    interval = TimeSpan.FromHours(iAmount);
-                    break;
-                default:
-                    break;
-            }
-
-            return interval;
-        }
         
         /// <summary>
         /// Builds a <see cref="LocalWeeklyCalendar"/> based on the given allowed days of weeks.
@@ -402,13 +377,21 @@ namespace AndrewSmith.Quartz.TextToSchedule
         private ICalendar BuildCalendarOnDayOfWeek(ICalendar baseCalendar, string[] dayofWeekSpecs)
         {
             //create calendar and exclude all days
-            //WeeklyCalendar calendar = new WeeklyCalendar();
+#if CUSTOM
             LocalWeeklyCalendar calendar = null;
 
             if (baseCalendar != null)
                 calendar = new LocalWeeklyCalendar(baseCalendar);
             else
                 calendar = new LocalWeeklyCalendar();
+#else
+            WeeklyCalendar calendar = null;
+
+            if (baseCalendar != null)
+                calendar = new WeeklyCalendar(baseCalendar);
+            else
+                calendar = new WeeklyCalendar();
+#endif
 
             calendar.DaysExcluded = new bool[7] { true, true, true, true, true, true, true};
 
@@ -439,16 +422,15 @@ namespace AndrewSmith.Quartz.TextToSchedule
             //adjust the utc month,day,year to match each other
             toTime = new DateTime(fromTime.Year, fromTime.Month, fromTime.Day, toTime.Hour, toTime.Minute, toTime.Second, toTime.Millisecond);
 
-            LocalDailyCalendar calendar = null;
+            bool shouldInvertTimeRange = false; //false = exclusive time range
 
-            //if the to time is lower than from
+            //if the toTime is lower than fromTime
             if (toTime < fromTime)
             {
-                //switch the variables
-                if (baseCalendar != null)
-                    calendar = new LocalDailyCalendar(baseCalendar, toTime, fromTime);
-                else
-                    calendar = new LocalDailyCalendar(toTime, fromTime);
+                //switch the from and to times
+                DateTime fromTemp = fromTime;
+                fromTime = toTime;
+                toTime = fromTemp;
             }
             else
             {
@@ -458,14 +440,27 @@ namespace AndrewSmith.Quartz.TextToSchedule
                 {
                     toTime = toTime.AddSeconds(1); 
                 }
-
-                if (baseCalendar != null)
-                    calendar = new LocalDailyCalendar(baseCalendar, fromTime, toTime);
-                else
-                    calendar = new LocalDailyCalendar(fromTime, toTime);
-
-                calendar.InvertTimeRange = true; //turn this into an inclusive range
+                shouldInvertTimeRange = true; //turn this into an inclusive range
             }
+
+#if CUSTOM
+            LocalDailyCalendar calendar = null;
+            if (baseCalendar != null)
+                calendar = new LocalDailyCalendar(baseCalendar, fromTime, toTime);
+            else
+                calendar = new LocalDailyCalendar(fromTime, toTime);
+
+            calendar.InvertTimeRange = shouldInvertTimeRange;
+#else
+            DailyCalendar calendar = null;
+            if (baseCalendar != null)
+                calendar = new DailyCalendar(baseCalendar, fromTime, toTime);
+            else
+                calendar = new DailyCalendar(fromTime, toTime);
+
+            calendar.InvertTimeRange = shouldInvertTimeRange;
+#endif
+
 
             return calendar;
         }
@@ -662,5 +657,27 @@ namespace AndrewSmith.Quartz.TextToSchedule
         #endregion
 
         #endregion
+
+        public IScheduleBuilder CreateTriggerBasedOnAmountAndTime(string amountString, string intervalUnitString)
+        {
+            var intervalUnit = GrammarHelper.GetIntervalUnitValueFromString(intervalUnitString);
+
+            int amount = 1;
+
+            if (amountString != null)
+                amount = GrammarHelper.GetAmountValueFromString(amountString);
+#if CUSTOM
+            CustomCalendarIntervalScheduleBuilder b = CustomCalendarIntervalScheduleBuilder.Create();
+#else
+            CalendarIntervalScheduleBuilder b = CalendarIntervalScheduleBuilder.Create();
+#endif
+
+            b.WithInterval(amount, intervalUnit);
+
+            b.PreserveHourOfDayAcrossDaylightSavings(true);
+            b.SkipDayIfHourDoesNotExist(false);
+
+            return b;
+        }
     }
 }
