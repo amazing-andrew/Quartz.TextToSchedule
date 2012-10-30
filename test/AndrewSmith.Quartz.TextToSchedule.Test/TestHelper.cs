@@ -7,7 +7,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quartz;
 using Quartz.Impl.Calendar;
 using Quartz.Spi;
+#if CUSTOM
 using AndrewSmith.Quartz.TextToSchedule.Calendars;
+#endif
 
 namespace AndrewSmith.Quartz.TextToSchedule.Test
 {
@@ -39,50 +41,38 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
                     string.Join(", ", results.RegisterGroups.Select(x => x.TriggerBuilder.Build()).OfType<ICronTrigger>().Select(x => x.CronExpressionString).ToList())));
         }
 
-
-
-        public static void AssertHasTimeIntervalOf(ITrigger trigger, TimeSpan span)
+        public static void AssertHasTimeIntervalOf(ITrigger trigger, int amount, IntervalUnit unit)
         {
-            ISimpleTrigger simpleTrigger = (ISimpleTrigger)trigger;
-            Assert.AreEqual(span, simpleTrigger.RepeatInterval);
-        }
-
-        public static void AssertHasCalendarOfType<T>(RegisterGroup group) where T : ICalendar
-        {
-            bool found = false;
-            ICalendar cal = group.Calendar;
-            
-            while (cal != null)
-            {
-                if (cal is T)
-                {
-                    found = true;
-                    break;
-                }
-
-                cal = cal.CalendarBase;
-            }
-
-            if (!found)
-                Assert.Fail("could not find a calendar or base calendar of type {0}", typeof(T));
+            ICalendarIntervalTrigger calTrigger = (ICalendarIntervalTrigger)trigger;
+            Assert.AreEqual(amount, calTrigger.RepeatInterval, "Repeat interval expected was {0}, but actual is {1}", amount, calTrigger.RepeatInterval);
+            Assert.AreEqual(unit, calTrigger.RepeatIntervalUnit, "Repeat Interval Unit expected was {0}, but actual is {1}", unit, calTrigger.RepeatIntervalUnit);
         }
 
         public static void AssertWeeklyCalendarHasDayIncluded(RegisterGroup group, DayOfWeek includedDay)
         {
+
+#if CUSTOM
             var weeklyCalendar = FindCalendarOfType<LocalWeeklyCalendar>(group);
+#else
+            var weeklyCalendar = FindCalendarOfType<WeeklyCalendar>(group);
+#endif
+
             Assert.IsTrue(!weeklyCalendar.IsDayExcluded(includedDay),
                 "day of week of {0} was expected to be included in the calendar but wasn't.",
                 includedDay);
         }
         public static void AssertWeeklyCalendarHasDayExcluded(RegisterGroup group, DayOfWeek includedDay)
         {
+
+#if CUSTOM
             var weeklyCalendar = FindCalendarOfType<LocalWeeklyCalendar>(group);
+#else
+            var weeklyCalendar = FindCalendarOfType<WeeklyCalendar>(group);
+#endif
             Assert.IsTrue(weeklyCalendar.IsDayExcluded(includedDay),
                 "day of week of {0} was expected to be excluded in the calendar but wasn't.",
                 includedDay);
         }
-
-
 
         public static void AssertDailyCalendarIsTimeIncluded(RegisterGroup group, int hour, int minute, int sec)
         {
@@ -92,10 +82,13 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
 
             date = date.ToUniversalTime();
 
+#if CUSTOM
             var dailyCal = FindCalendarOfType<LocalDailyCalendar>(group);
+#else
+            var dailyCal = FindCalendarOfType<DailyCalendar>(group);
+#endif
             Assert.IsTrue(dailyCal.IsTimeIncluded(date), "{0} as expected to be included in the daily calendar but wasn't", date);
         }
-
         public static void AssertDailyCalendarIsTimeExcluded(RegisterGroup group, int hour, int minute, int sec)
         {
             DateTimeOffset date = DateTimeOffset.Now;
@@ -104,13 +97,13 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
 
             date = date.ToUniversalTime();
 
+#if CUSTOM
             var dailyCal = FindCalendarOfType<LocalDailyCalendar>(group);
+#else
+            var dailyCal = FindCalendarOfType<DailyCalendar>(group);
+#endif
             Assert.IsFalse(dailyCal.IsTimeIncluded(date), "{0} as expected to be excluded in the daily calendar but wasn't", date);
         }
-
-
-
-
 
         private static T FindCalendarOfType<T>(RegisterGroup group) where T : ICalendar
         {

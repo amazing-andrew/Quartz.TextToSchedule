@@ -1,4 +1,6 @@
-﻿using Quartz;
+﻿#if CUSTOM
+
+using Quartz;
 using Quartz.Impl.Calendar;
 using System;
 using System.Collections.Generic;
@@ -33,32 +35,6 @@ namespace AndrewSmith.Quartz.TextToSchedule.Calendars
         /// <param name="info">The info.</param>
         /// <param name="context">The context.</param>
         public LocalWeeklyCalendar(SerializationInfo info, StreamingContext context) : base(info, context) { excludeAll = AreAllDaysExcluded(); }
-
-        /// <summary>
-        /// Determine whether the given time (in milliseconds) is 'included' by the
-        /// Calendar.
-        /// <para>
-        /// Note that this Calendar is only has full-day precision.
-        /// </para>
-        /// </summary>
-        /// <param name="timeUtc"></param>
-        /// <returns></returns>
-        public override bool IsTimeIncluded(DateTimeOffset timeUtc)
-        {
-            if (excludeAll)
-            {
-                return false;
-            }
-
-            // Test the base calendar first. Only if the base calendar not already
-            // excludes the time/date, continue evaluating this calendar instance.
-            if (!base.IsTimeIncluded(timeUtc))
-            {
-                return false;
-            }
-
-            return !(IsDayExcluded(timeUtc.DayOfWeek));
-        }
 
         /// <summary>
         /// Determine the next time (in milliseconds) that is 'included' by the
@@ -108,3 +84,5 @@ namespace AndrewSmith.Quartz.TextToSchedule.Calendars
         }
     }
 }
+
+#endif

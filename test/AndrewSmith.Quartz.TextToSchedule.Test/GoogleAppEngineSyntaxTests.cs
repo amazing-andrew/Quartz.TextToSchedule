@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Quartz.Impl.Calendar;
+using Quartz;
 
 namespace AndrewSmith.Quartz.TextToSchedule.Test
 {
@@ -41,7 +42,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var group = results.RegisterGroups[0];
             var trigger = group.TriggerBuilder.Build();
 
-            TestHelper.AssertHasTimeIntervalOf(trigger, TimeSpan.FromHours(12));
+            TestHelper.AssertHasTimeIntervalOf(trigger, 12, IntervalUnit.Hour);
         }
 
         [TestMethod]
@@ -123,7 +124,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var group = results.RegisterGroups[0];
             var trigger = group.TriggerBuilder.Build();
 
-            TestHelper.AssertHasTimeIntervalOf(trigger, TimeSpan.FromHours(2));
+            TestHelper.AssertHasTimeIntervalOf(trigger, 2, IntervalUnit.Hour);
 
             TestHelper.AssertDailyCalendarIsTimeIncluded(group, 12, 0, 0);
             TestHelper.AssertDailyCalendarIsTimeIncluded(group, 10, 0, 0);

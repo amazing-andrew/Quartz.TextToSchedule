@@ -3,7 +3,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AndrewSmith.Quartz.TextToSchedule;
 using Quartz;
 using Quartz.Impl.Calendar;
+#if CUSTOM
 using AndrewSmith.Quartz.TextToSchedule.Calendars;
+#endif
 
 namespace AndrewSmith.Quartz.TextToSchedule.Test
 {
@@ -27,7 +29,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var group = results.RegisterGroups[0];
             var trigger = group.TriggerBuilder.Build();
 
-            TestHelper.AssertHasTimeIntervalOf(trigger, TimeSpan.FromSeconds(1));
+            TestHelper.AssertHasTimeIntervalOf(trigger, 1, IntervalUnit.Second);
         }
 
         [TestMethod]
@@ -40,7 +42,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var group = results.RegisterGroups[0];
             var trigger = group.TriggerBuilder.Build();
 
-            TestHelper.AssertHasTimeIntervalOf(trigger, TimeSpan.FromSeconds(5));
+            TestHelper.AssertHasTimeIntervalOf(trigger, 5, IntervalUnit.Second);
         }
 
         [TestMethod]
@@ -54,7 +56,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var trigger = group.TriggerBuilder.Build();
 
 
-            TestHelper.AssertHasTimeIntervalOf(trigger, TimeSpan.FromSeconds(30));
+            TestHelper.AssertHasTimeIntervalOf(trigger, 30, IntervalUnit.Second);
         }
 
         [TestMethod]
@@ -68,8 +70,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var trigger = group.TriggerBuilder.Build();
 
 
-            TestHelper.AssertHasTimeIntervalOf(trigger, TimeSpan.FromHours(1));
-            TestHelper.AssertHasCalendarOfType<LocalWeeklyCalendar>(group);
+            TestHelper.AssertHasTimeIntervalOf(trigger, 1, IntervalUnit.Hour);
 
             TestHelper.AssertWeeklyCalendarHasDayIncluded(group, DayOfWeek.Monday);
 
@@ -91,8 +92,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var group = results.RegisterGroups[0];
             var trigger = group.TriggerBuilder.Build();
 
-            TestHelper.AssertHasTimeIntervalOf(trigger, TimeSpan.FromHours(1));
-            TestHelper.AssertHasCalendarOfType<LocalWeeklyCalendar>(group);
+            TestHelper.AssertHasTimeIntervalOf(trigger, 1, IntervalUnit.Hour);
 
             TestHelper.AssertWeeklyCalendarHasDayIncluded(group, DayOfWeek.Monday);
             TestHelper.AssertWeeklyCalendarHasDayIncluded(group, DayOfWeek.Tuesday);
@@ -114,8 +114,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var group = results.RegisterGroups[0];
             var trigger = group.TriggerBuilder.Build();
 
-            TestHelper.AssertHasTimeIntervalOf(trigger, TimeSpan.FromHours(1));
-            TestHelper.AssertHasCalendarOfType<LocalWeeklyCalendar>(group);
+            TestHelper.AssertHasTimeIntervalOf(trigger, 1, IntervalUnit.Hour);
 
             TestHelper.AssertWeeklyCalendarHasDayExcluded(group, DayOfWeek.Monday);
             TestHelper.AssertWeeklyCalendarHasDayExcluded(group, DayOfWeek.Tuesday);
@@ -137,8 +136,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var group = results.RegisterGroups[0];
             var trigger = group.TriggerBuilder.Build();
 
-            TestHelper.AssertHasTimeIntervalOf(trigger, TimeSpan.FromHours(2));
-            TestHelper.AssertHasCalendarOfType<LocalDailyCalendar>(group);
+            TestHelper.AssertHasTimeIntervalOf(trigger, 2, IntervalUnit.Hour);
         }
 
         [TestMethod]
@@ -151,9 +149,18 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
             var group = results.RegisterGroups[0];
             var trigger = group.TriggerBuilder.Build();
 
-            TestHelper.AssertHasTimeIntervalOf(trigger, TimeSpan.FromSeconds(10));
-            TestHelper.AssertHasCalendarOfType<LocalWeeklyCalendar>(group);
-            TestHelper.AssertHasCalendarOfType<LocalDailyCalendar>(group);
+            TestHelper.AssertHasTimeIntervalOf(trigger, 10, IntervalUnit.Second); 
+
+            TestHelper.AssertDailyCalendarIsTimeIncluded(group, 6, 30, 00);
+
+            TestHelper.AssertWeeklyCalendarHasDayIncluded(group, DayOfWeek.Monday);
+            TestHelper.AssertWeeklyCalendarHasDayIncluded(group, DayOfWeek.Tuesday);
+            TestHelper.AssertWeeklyCalendarHasDayIncluded(group, DayOfWeek.Wednesday);
+            TestHelper.AssertWeeklyCalendarHasDayIncluded(group, DayOfWeek.Thursday);
+            TestHelper.AssertWeeklyCalendarHasDayIncluded(group, DayOfWeek.Friday);
+
+            TestHelper.AssertWeeklyCalendarHasDayExcluded(group, DayOfWeek.Saturday);
+            TestHelper.AssertWeeklyCalendarHasDayExcluded(group, DayOfWeek.Sunday);
         }
 
         [TestMethod]

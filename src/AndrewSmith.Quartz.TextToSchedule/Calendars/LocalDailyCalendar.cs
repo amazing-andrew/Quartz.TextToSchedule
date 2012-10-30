@@ -17,6 +17,8 @@
 */
 #endregion
 
+#if CUSTOM
+
 using Quartz;
 using Quartz.Impl.Calendar;
 using System;
@@ -908,3 +910,5 @@ namespace AndrewSmith.Quartz.TextToSchedule.Calendars
         }
     }
 }
+
+#endif

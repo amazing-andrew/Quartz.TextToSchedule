@@ -73,14 +73,14 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
 
         #endregion
 
-        public TimeValue GetTimeValueFromString(string timeValueString)
+        public global::Quartz.IntervalUnit GetIntervalUnitValueFromString(string intervalUnitString)
         {
-            if (RegexHelper.IsFullMatch(timeValueString, GermanGrammar.TIMEVALUE_SECOND))
-                return TimeValue.Seconds;
-            else if (RegexHelper.IsFullMatch(timeValueString, GermanGrammar.TIMEVALUE_MINUTE))
-                return TimeValue.Minutes;
-            else if (RegexHelper.IsFullMatch(timeValueString, GermanGrammar.TIMEVALUE_HOUR))
-                return TimeValue.Hours;
+            if (RegexHelper.IsFullMatch(intervalUnitString, GermanGrammar.INTERVALUNIT_SECOND))
+                return global::Quartz.IntervalUnit.Second;
+            else if (RegexHelper.IsFullMatch(intervalUnitString, GermanGrammar.INTERVALUNIT_MINUTE))
+                return global::Quartz.IntervalUnit.Minute;
+            else if (RegexHelper.IsFullMatch(intervalUnitString, GermanGrammar.INTERVALUNIT_HOUR))
+                return global::Quartz.IntervalUnit.Hour;
 
             throw new Exception("Unknown time value string");
         }

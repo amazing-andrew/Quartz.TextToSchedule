@@ -21,9 +21,9 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
         /// <summary>
         /// Gets the time value from string.
         /// </summary>
-        /// <param name="timeValueString">The time value string.</param>
+        /// <param name="intervalUnitString">The time value string.</param>
         /// <returns></returns>
-        TimeValue GetTimeValueFromString(string timeValueString);
+        global::Quartz.IntervalUnit GetIntervalUnitValueFromString(string intervalUnitString);
 
         /// <summary>
         /// Gets the amount value from string.
