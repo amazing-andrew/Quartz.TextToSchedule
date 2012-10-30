@@ -7,7 +7,7 @@
     <ProjectGuid>{E58DE5CF-B066-40C4-AAA8-88620D91DE9E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AndrewSmith.Quartz.TextToSchedule</RootNamespace>
+    <RootNamespace>AndrewSmith.Quartz.Quartz.TextToSchedule</RootNamespace>
     <AssemblyName>AndrewSmith.Quartz.TextToSchedule</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;CUSTOM</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -56,8 +56,6 @@
     <Compile Include="Grammars\IGrammar.cs" />
     <Compile Include="Grammars\IGrammarHelper.cs" />
     <Compile Include="ITextToSchedule.cs" />
-    <Compile Include="Triggers\CustomCalendarIntervalScheduleBuilder.cs" />
-    <Compile Include="Triggers\CustomCalendarIntervalTriggerImpl.cs" />
     <Compile Include="Util\NamedFormatHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegexHelper.cs" />

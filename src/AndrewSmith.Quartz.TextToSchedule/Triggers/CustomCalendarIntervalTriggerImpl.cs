@@ -267,15 +267,27 @@ namespace AndrewSmith.Quartz.TextToSchedule.Triggers
 
         private bool DaylightSavingHourShiftOccuredAndAdvanceNeeded(ref DateTimeOffset newTime, int initialHourOfDay)
         {
-            if (PreserveHourOfDayAcrossDaylightSavings && newTime.Hour != initialHourOfDay)
+            DateTimeOffset toCheck = TimeZoneInfo.ConvertTime(newTime, this.TimeZone);
+
+            if (PreserveHourOfDayAcrossDaylightSavings && toCheck.Hour != initialHourOfDay)
             {
-                newTime = new DateTimeOffset(newTime.Year, newTime.Month, newTime.Day, initialHourOfDay, newTime.Minute, newTime.Second, newTime.Millisecond, newTime.Offset);
+                newTime = new DateTimeOffset(newTime.Year, newTime.Month, newTime.Day, initialHourOfDay, newTime.Minute, newTime.Second, newTime.Millisecond, toCheck.Offset);
                 if (newTime.Hour != initialHourOfDay)
                 {
                     return true;
                 }
             }
             return false;
+        }
+
+        //must be true, otherwise this get's saved as a regular calendar interval trigger when
+        //saved to a database.
+        public override bool HasAdditionalProperties
+        {
+            get
+            {
+                return true;
+            }
         }
     }
 }
