@@ -83,13 +83,12 @@ namespace AndrewSmith.Quartz.TextToSchedule.Triggers
                 //*********************************************************************
                 if (this.PreserveHourOfDayAcrossDaylightSavings && TimeZoneInfo.ConvertTime(time.Value, this.TimeZone).Offset != sTime.Offset)
                 {
-                    var local = TimeZoneInfo.ConvertTime(time.Value, this.TimeZone).Offset;
-                    var start = sTime.Offset;
+                    var localTime = TimeZoneInfo.ConvertTime(time.Value, this.TimeZone);
+                    var localOffset = localTime.Offset;
+                    var startOffset = sTime.Offset;
+                    var diff = startOffset - localOffset;
 
-                    if (local < start)
-                        time = time.Value.Add(start - local);
-                    else
-                        time = time.Value.Add(local - start);
+                    time = time.Value.Add(diff);
                 }
             }
             else if (RepeatIntervalUnit == IntervalUnit.Minute)
@@ -106,13 +105,12 @@ namespace AndrewSmith.Quartz.TextToSchedule.Triggers
                 //*********************************************************************
                 if (this.PreserveHourOfDayAcrossDaylightSavings && TimeZoneInfo.ConvertTime(time.Value, this.TimeZone).Offset != sTime.Offset)
                 {
-                    var local = TimeZoneInfo.ConvertTime(time.Value, this.TimeZone).Offset;
-                    var start = sTime.Offset;
+                    var localTime = TimeZoneInfo.ConvertTime(time.Value, this.TimeZone);
+                    var localOffset = localTime.Offset;
+                    var startOffset = sTime.Offset;
+                    var diff = startOffset - localOffset;
 
-                    if (local < start)
-                        time = time.Value.Add(start - local);
-                    else
-                        time = time.Value.Add(local - start);
+                    time = time.Value.Add(diff);
                 }
 
             }
@@ -130,13 +128,12 @@ namespace AndrewSmith.Quartz.TextToSchedule.Triggers
                 //*********************************************************************
                 if (this.PreserveHourOfDayAcrossDaylightSavings && TimeZoneInfo.ConvertTime(time.Value, this.TimeZone).Offset != sTime.Offset)
                 {
-                    var local = TimeZoneInfo.ConvertTime(time.Value, this.TimeZone).Offset;
-                    var start = sTime.Offset;
+                    var localTime = TimeZoneInfo.ConvertTime(time.Value, this.TimeZone);
+                    var localOffset = localTime.Offset;
+                    var startOffset = sTime.Offset;
+                    var diff = startOffset - localOffset;
 
-                    if (local < start)
-                        time = time.Value.Add(start - local);
-                    else
-                        time = time.Value.Add(local - start);
+                    time = time.Value.Add(diff);
                 }
             }
             else

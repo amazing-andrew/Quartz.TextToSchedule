@@ -31,8 +31,7 @@ namespace SchedulerExaminer
 
         public static readonly DependencyProperty InputProperty =
             DependencyProperty.Register("Input", typeof(string), typeof(Model),
-                new FrameworkPropertyMetadata(null,
-                    new PropertyChangedCallback(InputChanged)));
+                new FrameworkPropertyMetadata(null, new PropertyChangedCallback(InputChanged)));
 
         public string Explanation
         {
@@ -55,6 +54,19 @@ namespace SchedulerExaminer
             DependencyProperty.Register("Triggers", typeof(ObservableCollection<string>), typeof(Model), new PropertyMetadata(null));
 
 
+
+
+        public TimeZoneInfo TimeZone
+        {
+            get { return (TimeZoneInfo)GetValue(TimeZoneProperty); }
+            set { SetValue(TimeZoneProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TimeZone.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TimeZoneProperty =
+            DependencyProperty.Register("TimeZone", typeof(TimeZoneInfo), typeof(Model), new FrameworkPropertyMetadata(TimeZoneInfo.Local, new PropertyChangedCallback(InputChanged)));
+
+
         public Model()
         {
             Triggers = new ObservableCollection<string>();
@@ -72,12 +84,13 @@ namespace SchedulerExaminer
                 CronExpression cron = new CronExpression(m.Input);
                 results = new TextToScheduleResults();
                 results.Add(TriggerBuilder.Create()
-                    .WithCronSchedule(m.Input));
+                    .WithCronSchedule(m.Input, tb =>
+                        tb.InTimeZone(m.TimeZone)));
             }
             catch
             {
                 var english = TextToScheduleFactory.CreateEnglishParser();
-                results = english.Parse(m.Input);
+                results = english.Parse(m.Input, m.TimeZone);
             }
 
             if (results == null)
@@ -86,7 +99,7 @@ namespace SchedulerExaminer
                 {
                     //try german verion
                     var german = new TextToSchedule(new AndrewSmith.Quartz.TextToSchedule.Grammars.GermanGrammar(), new AndrewSmith.Quartz.TextToSchedule.Grammars.GermanGrammarHelper());
-                    results = german.Parse(m.Input);
+                    results = german.Parse(m.Input, m.TimeZone);
                 }
                 catch
                 {
@@ -96,17 +109,18 @@ namespace SchedulerExaminer
             
 
             if (results != null)
-            {            
-                List<DateTime> list = new List<DateTime>();
+            {
+                List<DateTimeOffset> list = new List<DateTimeOffset>();
 
                 foreach (var groups in results.RegisterGroups)
 	            {
                     var trigger = (IOperableTrigger)groups.TriggerBuilder.Build();
+
                     var dates = TriggerUtils.ComputeFireTimes(trigger, groups.Calendar, MaxResultsToReturn);
 
                     foreach (var d in dates)
                     {
-                        list.Add(d.ToLocalTime().DateTime);
+                        list.Add(TimeZoneInfo.ConvertTime(d, m.TimeZone));
                     }
 	            }
 
@@ -115,7 +129,7 @@ namespace SchedulerExaminer
 
                 foreach (var item in list.Take(MaxResultsToReturn))
                 {
-                    m.Triggers.Add(item.ToString("ddd, MM/dd/yyyy hh:mm:ss tt (zzz G\\MT)"));
+                    m.Triggers.Add(item.ToString("ddd, MM/dd/yyyy hh:mm:ss tt (zzz)"));
                 }
             }
         }

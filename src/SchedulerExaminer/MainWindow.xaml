@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
 
         <TextBox x:Name="tbInput" Grid.Row="0" Grid.Column="0" Text="{Binding Input, UpdateSourceTrigger=PropertyChanged}" />
-        <TextBlock x:Name="triggerExplaination" Grid.Row="0" Grid.Column="1" Text="{Binding Explaination}" />
+        <ComboBox x:Name="cbTimeZones" Grid.Row="0" Grid.Column="1" SelectedItem="{Binding TimeZone}" />
         
         <ListBox x:Name="lbTriggerTimes" Grid.Row="2" Grid.ColumnSpan="2" ItemsSource="{Binding Triggers}" FontFamily="Courier New">
             

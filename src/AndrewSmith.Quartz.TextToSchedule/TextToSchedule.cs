@@ -82,28 +82,43 @@ namespace AndrewSmith.Quartz.TextToSchedule
         /// </returns>
         public TextToScheduleResults Parse(string text)
         {
+            return Parse(text, TimeZoneInfo.Local);
+        }
+
+        /// <summary>
+        /// Parses the specified text into a schedule object with the given time zone.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="timeZone">The time zone.</param>
+        /// <returns></returns>
+        public TextToScheduleResults Parse(string text, TimeZoneInfo timeZone)
+        {
             text = GrammarHelper.Normalize(text);
 
             TextToScheduleResults results = new TextToScheduleResults();
             bool matched = false;
 
-            if (ExecuteMatch(Grammar.Expression1, text, results, Expression1Handler))
+            if (ExecuteMatch(Grammar.Expression1, text, timeZone, results, Expression1Handler))
             {
                 matched = true;
             }
-            else if (ExecuteMatch(Grammar.Expression2, text, results, Expression2Handler))
+            else if (ExecuteMatch(Grammar.Expression2, text, timeZone, results, Expression2Handler))
             {
                 matched = true;
             }
-            else if (ExecuteMatch(Grammar.Expression3, text, results, Expression3Handler))
+            else if (ExecuteMatch(Grammar.Expression3, text, timeZone, results, Expression3Handler))
             {
                 matched = true;
             }
 
             if (matched)
-                return results;   
+            {
+                return results;
+            }
             else
+            {
                 return null;
+            }
         }
 
         /// <summary>
@@ -111,7 +126,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
         /// </summary>
         /// <param name="nameValueCollection">A collection of values from the named capture groups.</param>
         /// <param name="results">The results.</param>
-        private void Expression1Handler(NameValueCollection nameValueCollection, TextToScheduleResults results)
+        private void Expression1Handler(NameValueCollection nameValueCollection, TimeZoneInfo timeZone, TextToScheduleResults results)
         {
             var amountString = nameValueCollection["AMOUNT"];
             var intervalUnitString = nameValueCollection["INTERVALUNIT"];
@@ -131,13 +146,13 @@ namespace AndrewSmith.Quartz.TextToSchedule
             //DAY OF WEEK SPECS
             if (dayOfWeekSpecs != null)
             {
-                calendar = BuildCalendarOnDayOfWeek(calendar, dayOfWeekSpecs);
+                calendar = BuildCalendarOnDayOfWeek(calendar, dayOfWeekSpecs, timeZone);
             }
 
             //MONTH SPECS
             if (monthSpecs != null)
             {
-                calendar = BuildCalendarOnMonths(calendar, monthSpecs);
+                calendar = BuildCalendarOnMonths(calendar, monthSpecs, timeZone);
             }
 
 
@@ -146,7 +161,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
             //check for ranged time
             if (fromTime != null && toTime != null)
             {
-                calendar = BuildCalendarOnTimeRange(calendar, fromTime, toTime);
+                calendar = BuildCalendarOnTimeRange(calendar, fromTime, toTime, timeZone);
 
                 //set the start date as the from time
                 DateTime? fromTimeStartDate = GrammarHelper.GetTimeFromTimeString(fromTime);
@@ -162,14 +177,8 @@ namespace AndrewSmith.Quartz.TextToSchedule
             //BUILD TRIGGER
             TriggerBuilder triggerBuilder = TriggerBuilder.Create();
 
-            //uncomment to use simple builder
-            //SimpleScheduleBuilder simpleBuilder = SimpleScheduleBuilder.Create();
-            //simpleBuilder.WithInterval(interval);
-            //simpleBuilder.RepeatForever();
-            //triggerBuilder.WithSchedule(simpleBuilder);
-
             //use custom calendar interval trigger
-            triggerBuilder.WithSchedule(CreateTriggerBasedOnAmountAndTime(amountString, intervalUnitString));
+            triggerBuilder.WithSchedule(CreateTriggerBasedOnAmountAndTime(amountString, intervalUnitString, timeZone));
 
             
             //start on from time
@@ -184,7 +193,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
         /// </summary>
         /// <param name="nameValueCollection">A collection of values from the named capture groups.</param>
         /// <param name="results">The results.</param>
-        private void Expression2Handler(NameValueCollection nameValueCollection, TextToScheduleResults results)
+        private void Expression2Handler(NameValueCollection nameValueCollection, TimeZoneInfo timeZone, TextToScheduleResults results)
         {
             var time = nameValueCollection["TIME"];
             var fromTime = nameValueCollection["FROMTIME"];
@@ -280,7 +289,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
         /// </summary>
         /// <param name="nameValueCollection">A collection of values from the named capture groups.</param>
         /// <param name="results">The results.</param>
-        private void Expression3Handler(NameValueCollection nameValueCollection, TextToScheduleResults results)
+        private void Expression3Handler(NameValueCollection nameValueCollection, TimeZoneInfo timeZone, TextToScheduleResults results)
         {
             var time = nameValueCollection["TIME"];
 
@@ -350,7 +359,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
         /// <param name="results">The results.</param>
         /// <param name="matchFunction">The match function to run if it matches.</param>
         /// <returns></returns>
-        private static bool ExecuteMatch(string expression, string input, TextToScheduleResults results, Action<NameValueCollection, TextToScheduleResults> matchFunction)
+        private static bool ExecuteMatch(string expression, string input, TimeZoneInfo timeZone, TextToScheduleResults results, Action<NameValueCollection, TimeZoneInfo, TextToScheduleResults> matchFunction)
         {
             expression = "^" + expression + "$";
 
@@ -358,7 +367,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
 
             if (dic != null)
             {
-                matchFunction(dic, results);
+                matchFunction(dic, timeZone, results);
                 return true;
             }
 
@@ -374,7 +383,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
         /// </summary>
         /// <param name="dayofWeekSpecs">The day of week specs.</param>
         /// <returns></returns>
-        private ICalendar BuildCalendarOnDayOfWeek(ICalendar baseCalendar, string[] dayofWeekSpecs)
+        private ICalendar BuildCalendarOnDayOfWeek(ICalendar baseCalendar, string[] dayofWeekSpecs, TimeZoneInfo timeZone)
         {
             //create calendar and exclude all days
 #if CUSTOM
@@ -401,7 +410,8 @@ namespace AndrewSmith.Quartz.TextToSchedule
             {
                 calendar.SetDayExcluded(item, false);
             }
-            
+
+            calendar.TimeZone = timeZone;
             return calendar;
         }
 
@@ -411,7 +421,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
         /// <param name="fromTimeString">From time.</param>
         /// <param name="toTimeString">To time.</param>
         /// <returns></returns>
-        private ICalendar BuildCalendarOnTimeRange(ICalendar baseCalendar, string fromTimeString, string toTimeString)
+        private ICalendar BuildCalendarOnTimeRange(ICalendar baseCalendar, string fromTimeString, string toTimeString, TimeZoneInfo timeZone)
         {
             DateTime? dFromTime = GrammarHelper.GetTimeFromTimeString(fromTimeString);
             DateTime? dToTime = GrammarHelper.GetTimeFromTimeString(toTimeString);
@@ -461,7 +471,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
             calendar.InvertTimeRange = shouldInvertTimeRange;
 #endif
 
-
+            calendar.TimeZone = timeZone;
             return calendar;
         }
 
@@ -470,7 +480,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
         /// </summary>
         /// <param name="monthSpecs">The month specs.</param>
         /// <returns></returns>
-        private ICalendar BuildCalendarOnMonths(ICalendar baseCalendar, string[] monthSpecs)
+        private ICalendar BuildCalendarOnMonths(ICalendar baseCalendar, string[] monthSpecs, TimeZoneInfo timeZone)
         {
             int maxMonths = 12;
             var months = GrammarHelper.GetMonthValues(monthSpecs);
@@ -498,6 +508,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
             else
                 cronCal = new CronCalendar(exclusiveCronExpression);
 
+            cronCal.TimeZone = timeZone;
             return cronCal;
         }
 
@@ -658,7 +669,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
 
         #endregion
 
-        public IScheduleBuilder CreateTriggerBasedOnAmountAndTime(string amountString, string intervalUnitString)
+        public IScheduleBuilder CreateTriggerBasedOnAmountAndTime(string amountString, string intervalUnitString, TimeZoneInfo timeZone)
         {
             var intervalUnit = GrammarHelper.GetIntervalUnitValueFromString(intervalUnitString);
 
@@ -676,8 +687,10 @@ namespace AndrewSmith.Quartz.TextToSchedule
 
             b.PreserveHourOfDayAcrossDaylightSavings(true);
             b.SkipDayIfHourDoesNotExist(false);
-
+            b.InTimeZone(timeZone);
             return b;
         }
-    }
+
+
+   }
 }

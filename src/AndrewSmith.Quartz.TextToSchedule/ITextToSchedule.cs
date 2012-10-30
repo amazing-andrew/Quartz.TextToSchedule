@@ -26,5 +26,13 @@ namespace AndrewSmith.Quartz.TextToSchedule
         /// <param name="text">The text.</param>
         /// <returns>Returns null if the text is invalid.</returns>
         TextToScheduleResults Parse(string text);
+
+        /// <summary>
+        /// Parses the specified text into a schedule object with the given time zone.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="timeZone">The time zone.</param>
+        /// <returns></returns>
+        TextToScheduleResults Parse(string text, TimeZoneInfo timeZone);
     }
 }

@@ -24,6 +24,8 @@ namespace SchedulerExaminer
         {
             InitializeComponent();
             this.DataContext = new Model();
+            this.cbTimeZones.ItemsSource = TimeZoneInfo.GetSystemTimeZones();
+            this.cbTimeZones.DisplayMemberPath = "DisplayName";
         }
     }
 }
