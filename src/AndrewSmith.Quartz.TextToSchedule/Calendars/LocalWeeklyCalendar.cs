@@ -62,7 +62,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Calendars
 
             // Get timestamp for 00:00:00
             //DateTime d = timeUtc.Date;   --commented out for local time impl
-            DateTime d = timeUtc.ToLocalTime().Date;
+            DateTimeOffset d = TimeZoneInfo.ConvertTime(timeUtc, this.TimeZone);
 
             if (!IsDayExcluded(d.DayOfWeek))
             {

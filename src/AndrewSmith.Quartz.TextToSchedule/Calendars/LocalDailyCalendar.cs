@@ -422,7 +422,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Calendars
 
 
             //CHECK FOR LOCAL TIMES
-            timeUtc = timeUtc.ToLocalTime();
+            timeUtc = TimeZoneInfo.ConvertTime(timeUtc, this.TimeZone);
 
             DateTimeOffset startOfDayInMillis = GetStartOfDay(timeUtc);
             DateTimeOffset endOfDayInMillis = GetEndOfDay(timeUtc);
