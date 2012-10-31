@@ -81,6 +81,14 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
                 return global::Quartz.IntervalUnit.Minute;
             else if (RegexHelper.IsFullMatch(intervalUnitString, GermanGrammar.INTERVALUNIT_HOUR))
                 return global::Quartz.IntervalUnit.Hour;
+            else if (RegexHelper.IsFullMatch(intervalUnitString, GermanGrammar.INTERVALUNIT_DAY))
+                return global::Quartz.IntervalUnit.Day;
+            else if (RegexHelper.IsFullMatch(intervalUnitString, GermanGrammar.INTERVALUNIT_WEEK))
+                return global::Quartz.IntervalUnit.Week;
+            else if (RegexHelper.IsFullMatch(intervalUnitString, GermanGrammar.INTERVALUNIT_MONTH))
+                return global::Quartz.IntervalUnit.Month;
+            else if (RegexHelper.IsFullMatch(intervalUnitString, GermanGrammar.INTERVALUNIT_YEAR))
+                return global::Quartz.IntervalUnit.Year;
 
             throw new Exception("Unknown time value string");
         }
@@ -95,19 +103,27 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
             if (datespec == null)
                 return null;
 
-            var matches = RegexHelper.GetNamedMatches(datespec, GermanGrammar.DATE_SPEC);
+            var matches = RegexHelper.GetNamedMatches(datespec, "^" + GermanGrammar.DATE_SPEC + "$");
 
             if (matches == null)
                 return null;
 
-            string month = matches["MONTH"];
-            string day = matches["DAY"];
+            string monthString = matches["MONTH"];
+            string dayString = matches["DAY"];
+            string yearString = matches["YEAR"];
 
-            int iMonthValue = GetMonthValue(month);
-            int iDay = int.Parse(day);
+            int iMonthValue = GetMonthValue(monthString);
+            int iDay = 1;
 
-            int currentYear = DateTime.Now.Year;
-            return new DateTime(currentYear, iMonthValue, iDay);
+            if (dayString != null)
+                iDay = int.Parse(dayString);
+
+            int iYear = DateTime.Now.Year; //current year
+
+            if (yearString != null)
+                iYear = GetYearValue(yearString);
+
+            return new DateTime(iYear, iMonthValue, iDay, 0, 0, 0, 0);
         }
         public DateTime? GetTimeFromTimeString(string time)
         {
@@ -261,6 +277,14 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
         /// <exception cref="System.Exception">Invalid month value</exception>
         public int GetMonthValue(string monthName)
         {
+            //check to see if this is a numeric month
+            int iMonth = 0;
+            if (int.TryParse(monthName, out iMonth))
+            {
+                if (iMonth >= 1 && iMonth <= 12)
+                    return iMonth;
+            }
+
             if (RegexHelper.IsFullMatch(monthName, GermanGrammar.JANUARY))
                 return 1;
             if (RegexHelper.IsFullMatch(monthName, GermanGrammar.FEBRUARY))
@@ -385,6 +409,12 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
         public int GetYearValue(string year)
         {
             return int.Parse(year);
+        }
+
+
+        public int GetDayValue(string day)
+        {
+            return int.Parse(day);
         }
     }
 }

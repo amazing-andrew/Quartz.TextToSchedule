@@ -29,6 +29,9 @@ namespace ExampleApp
 
             //schedule job
             results.ScheduleWithJob(sched, job);
+
+            Console.WriteLine("Job scheduled!");
+            Console.WriteLine();
         }
     }
 }

@@ -70,6 +70,13 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
         /// <returns></returns>
         List<DayOfWeek> GetDayOfWeekValues(string[] dayOfWeekSpecs);
 
+        /// <summary>
+        /// Gets the day value.
+        /// </summary>
+        /// <param name="day">The day.</param>
+        /// <returns></returns>
+        int GetDayValue(string day);
+
         //month
 
         /// <summary>

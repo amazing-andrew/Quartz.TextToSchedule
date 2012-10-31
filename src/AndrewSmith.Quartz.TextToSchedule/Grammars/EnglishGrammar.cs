@@ -25,13 +25,13 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
         public static readonly string INTERVALUNIT_MINUTE = "(m|min|mins|minute|minutes)";
         public static readonly string INTERVALUNIT_HOUR = "(h|hr|hrs|hour|hours)";
 
-        //public static readonly string INTERVALUNIT_DAY = "(day|days)";
-        //public static readonly string INTERVALUNIT_WEEK = "(week|weeks)";
-        //public static readonly string INTERVALUNIT_MONTH = "(month|months|mth)";
-        //public static readonly string INTERVALUNIT_YEAR = "(yr|year|years)";
+        public static readonly string INTERVALUNIT_DAY = "(day|days)";
+        public static readonly string INTERVALUNIT_WEEK = "(week|weeks)";
+        public static readonly string INTERVALUNIT_MONTH = "(month|months|mth)";
+        public static readonly string INTERVALUNIT_YEAR = "(yr|year|years)";
 
-        public static readonly string INTERVALUNIT = RegexHelper.Builder_GroupOf("INTERVALUNIT", new string[] { INTERVALUNIT_SECOND, INTERVALUNIT_MINUTE, INTERVALUNIT_HOUR });
-        //public static readonly string INTERVALUNIT_EXTENDED = RegexHelper.Builder_GroupOf("INTERVALUNIT", new string[] { INTERVALUNIT_SECOND, INTERVALUNIT_MINUTE, INTERVALUNIT_HOUR, INTERVALUNIT_DAY, INTERVALUNIT_WEEK, INTERVALUNIT_YEAR });
+        public static readonly string INTERVALUNIT_TIME = RegexHelper.Builder_GroupOf("INTERVALUNIT", new string[] { INTERVALUNIT_SECOND, INTERVALUNIT_MINUTE, INTERVALUNIT_HOUR });
+        public static readonly string INTERVALUNIT_DATE = RegexHelper.Builder_GroupOf("INTERVALUNIT", new string[] { INTERVALUNIT_DAY, INTERVALUNIT_WEEK, INTERVALUNIT_MONTH, INTERVALUNIT_YEAR });
 
         #endregion
 
@@ -113,15 +113,14 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
 
         #region Patterns - DATE
 
-        public static readonly string DATE_DAY = @"(?<DAY>[0-9]|1[0-9]|2[0-9]|3[0-3])(st|nd|rd|th)?";
+        public static readonly string DATE_DAY = @"(?<DAY>(0?[1-9])|(1[0-9])|(2[0-9])|(3[0-3]))(st|nd|rd|th)?";
         public static readonly string DATE_YEAR = @"(?<YEAR>\d\d(\d\d)?)";
-        public static readonly string DATE = @"({MONTH} ?,? ?{DATE_DAY}( ?,? {DATE_YEAR})?)";
+        public static readonly string DATE = @"({MONTH}( ?,? ?{DATE_DAY})?( ?,? {DATE_YEAR})?)";
 
-        //public static readonly string DATE_MONTH_NUMERIC = "(?<MONTH>(0?[1-9]|1[1-2]))";
-        //public static readonly string DATE_YEAR = @"(?<YEAR>\d?\d?\d\d)";
-        //public static readonly string DATE2 = @"({DATE_MONTH_NUMERIC}/{DATE_DAY}(/{DATE_YEAR})?)";
+        public static readonly string DATE_MONTH_NUMERIC = "(?<MONTH>(0?[1-9]|1[0-2]))";
+        public static readonly string DATE2 = @"({DATE_MONTH_NUMERIC}/{DATE_DAY}(/{DATE_YEAR})?)";
 
-        public static readonly string DATE_SPEC = RegexHelper.Builder_GroupOf("DATESPEC", new string[] { DATE });
+        public static readonly string DATE_SPEC = RegexHelper.Builder_GroupOf("DATESPEC", new string[] { DATE, DATE2 });
 
         #endregion
 
@@ -192,7 +191,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
         #region Expressions
 
         //every [n] (sec|min|hour) [on mon-fri] [of monthspec] [time]
-        public static readonly string SpecialExpr1 = @"(every( {AMOUNT})? ?{INTERVALUNIT}( on {DAYOFWEEK_SPEC})?( of {MONTH_SPEC})?( {TIME_SPEC})?)";
+        public static readonly string SpecialExpr1 = @"(every( {AMOUNT})? ?{INTERVALUNIT_TIME}( on {DAYOFWEEK_SPEC})?( of {MONTH_SPEC})?( {TIME_SPEC})?)";
 
         //(every|ordinal) (day of week) [of (month)] [time]
         public static readonly string SpecialExpr2 = @"((every|{ORDINAL})( (day|{DAYOFWEEK_SPEC}))( of (month|{MONTH_SPEC}))?( {TIME_ONCE})?)";
@@ -200,21 +199,41 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
         //[every|on] (date) [time]
         public static readonly string SpecialExpr3 = @"(((every|on) )?{DATE_SPEC}( {TIME_ONCE})?)";
 
+        /// every [n] (days|weeks|months|years) (from [date]) (at [time])
+        public static readonly string SpecialExpr4 = @"(every( {AMOUNT})? ?{INTERVALUNIT_DATE}( (from)? {DATE_SPEC})?( {TIME_SPEC})?)";
+
         #endregion
 
+        /// <summary>
+        /// every [n] (sec|min|hour) [on mon-fri] [of monthspec] [time]
+        /// </summary>
         public string Expression1
         {
             get { return SpecialExpr1; }
         }
 
+        /// <summary>
+        /// (every|ordinal) (day of week) [of (month)] [time]
+        /// </summary>
         public string Expression2
         {
             get { return SpecialExpr2; }
         }
 
+        /// <summary>
+        /// [every|on] (date) [time]
+        /// </summary>
         public string Expression3
         {
             get { return SpecialExpr3; }
+        }
+
+        /// <summary>
+        /// every [n] (days|weeks|months|years) (from [date]) (at [time])
+        /// </summary>
+        public string Expression4
+        {
+            get { return SpecialExpr4; }
         }
     }
 }

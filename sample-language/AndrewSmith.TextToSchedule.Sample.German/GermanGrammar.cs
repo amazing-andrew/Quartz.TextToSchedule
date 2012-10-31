@@ -29,13 +29,13 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
         public static readonly string INTERVALUNIT_MINUTE = "(m|min|minute|minuten)";
         public static readonly string INTERVALUNIT_HOUR = "(h|std|stunde|stunden)";
 
-        //public static readonly string INTERVALUNIT_DAY = "(day|days)";
-        //public static readonly string INTERVALUNIT_WEEK = "(week|weeks)";
-        //public static readonly string INTERVALUNIT_MONTH = "(month|months|mth)";
-        //public static readonly string INTERVALUNIT_YEAR = "(yr|year|years)";
+        public static readonly string INTERVALUNIT_DAY = "(tag|tags|tage)";
+        public static readonly string INTERVALUNIT_WEEK = "(wochen?)";
+        public static readonly string INTERVALUNIT_MONTH = "(monate?n?)";
+        public static readonly string INTERVALUNIT_YEAR = "(jahr(e|n|en|lich))";
 
-        public static readonly string INTERVALUNIT = RegexHelper.Builder_GroupOf("INTERVALUNIT", new string[] { INTERVALUNIT_SECOND, INTERVALUNIT_MINUTE, INTERVALUNIT_HOUR });
-        //public static readonly string INTERVALUNIT_EXTENDED = RegexHelper.Builder_GroupOf("INTERVALUNIT", new string[] { INTERVALUNIT_SECOND, INTERVALUNIT_MINUTE, INTERVALUNIT_HOUR, INTERVALUNIT_DAY, INTERVALUNIT_WEEK, INTERVALUNIT_YEAR });
+        public static readonly string INTERVALUNIT_TIME = RegexHelper.Builder_GroupOf("INTERVALUNIT", new string[] { INTERVALUNIT_SECOND, INTERVALUNIT_MINUTE, INTERVALUNIT_HOUR });
+        public static readonly string INTERVALUNIT_DATE = RegexHelper.Builder_GroupOf("INTERVALUNIT", new string[] { INTERVALUNIT_DAY, INTERVALUNIT_WEEK, INTERVALUNIT_MONTH, INTERVALUNIT_YEAR });
 
         #endregion
 
@@ -109,17 +109,17 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
 
         public static readonly string TIME = @"(?<TIME>{TIME_HOUR}((:|\.| ){TIME_MINUTE})?((:|\.| ){TIME_SECOND})? ?(uhr)?)";
 
-        public static readonly string TIME_ONCE = "(( ?(von|ab|um|im|am)? ?)?{TIME})";
-        public static readonly string TIME_RANGE = "((von|ab|um|im|am)? ?(?<FROMTIME>{TIME}) bis (?<TOTIME>{TIME}))";
+        public static readonly string TIME_ONCE = "(( ?(von|vom|ab|auf|um|im|am)? ?)?{TIME})";
+        public static readonly string TIME_RANGE = "((von|vom|ab|auf|um|im|am)? ?(?<FROMTIME>{TIME}) bis (?<TOTIME>{TIME}))";
         public static readonly string TIME_SPEC = RegexHelper.Builder_GroupOf("TIMESPEC", new string[] { TIME_ONCE, TIME_RANGE });
 
         #endregion
 
         #region Patterns - DATE
 
-        public static readonly string DATE_DAY = @"(?<DAY>[0-9]|1[0-9]|2[0-9]|3[0-3])(st|nd|rd|th|\.)?";
+        public static readonly string DATE_DAY = @"(?<DAY>(0?[1-9])|(1[0-9])|(2[0-9])|(3[0-3]))(st|nd|rd|th|\.)?";
         public static readonly string DATE_YEAR = @"(?<YEAR>\d\d(\d\d)?)";
-        public static readonly string DATE = @"({MONTH} ?,? ?{DATE_DAY}( ?,? {DATE_YEAR})?)";
+        public static readonly string DATE = @"({MONTH} ?,? ?({DATE_DAY})?( ?,? ({DATE_YEAR}))?)";
         public static readonly string DATE2 = @"({DATE_DAY} ?,? ?{MONTH}( ?,? {DATE_YEAR})?)"; //added another date
         public static readonly string DATE_SPEC = RegexHelper.Builder_GroupOf("DATESPEC", new string[] { DATE, DATE2 });
 
@@ -146,13 +146,17 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
         #region Expressions
 
         //every [n] (sec|min|hour) [on mon-fri] [of monthspec] [time]
-        public static readonly string SpecialExpr1 = @"((jede|alle|jeden|jeder)( {AMOUNT})? {INTERVALUNIT}(( (von|im|am|um))? {DAYOFWEEK_SPEC})?(( (von|im|am|um))? {MONTH_SPEC})?( {TIME_SPEC})?)";
+        public static readonly string SpecialExpr1 = @"((jede|alle|jeden|jeder)( {AMOUNT})? {INTERVALUNIT_TIME}(( (von|vom|im|am|um))? {DAYOFWEEK_SPEC})?(( (von|vom|im|am|um))? {MONTH_SPEC})?( {TIME_SPEC})?)";
 
         //(every|ordinal) (day of week) [of (month)] [time]
-        public static readonly string SpecialExpr2 = @"(((jede|alle|jeden|jeder)|(am )?{ORDINAL})( (tag|{DAYOFWEEK_SPEC}))(( ?(von|im|am|um))? (((des|im|eines?) )?monats|{MONTH_SPEC}))?( {TIME_ONCE})?)";
+        public static readonly string SpecialExpr2 = @"(((jede|alle|jeden|jeder)|(am )?{ORDINAL})( (tag|tags|{DAYOFWEEK_SPEC}))(( ?(von|vom|im|am|um))? (((des|im|eines?) )?monats|{MONTH_SPEC}))?( {TIME_ONCE})?)";
 
         //[every|on] (date) [time]
         public static readonly string SpecialExpr3 = @"(((jede|alle|jeden|jeder|am|um) )?{DATE_SPEC}( {TIME_ONCE})?)";
+
+        /// every [n] (days|weeks|months|years) (from [date]) (at [time])
+        public static readonly string SpecialExpr4 = @"(((jede|alle|jeden|jeder) )?( ?{AMOUNT})? ?{INTERVALUNIT_DATE}( ?(von|vom|ab|auf|um|im|am)? {DATE_SPEC})?( {TIME_SPEC})?)";
+
 
         #endregion
 
@@ -172,6 +176,12 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
         public string Expression3
         {
             get { return SpecialExpr3; }
+        }
+
+
+        public string Expression4
+        {
+            get { return SpecialExpr4; }
         }
     }
 }

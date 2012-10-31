@@ -26,5 +26,10 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
         /// [every|on] (date) [time]
         /// </summary>
         string Expression3 { get; }
+
+        /// <summary>
+        /// every [n] (days|weeks|months|years) (from [date]) (at [time])
+        /// </summary>
+        string Expression4 { get; }
     }
 }

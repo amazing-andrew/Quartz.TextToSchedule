@@ -16,7 +16,7 @@ using AndrewSmith.Quartz.TextToSchedule.Util;
 namespace AndrewSmith.Quartz.TextToSchedule
 {
     /// <summary>
-    /// Default Impl of an <see cref="ITextToSchedule"/>
+    /// Default Impl of an <see cref="ITextToSchedule" />
     /// </summary>
     public class TextToSchedule : ITextToSchedule
     {
@@ -111,6 +111,11 @@ namespace AndrewSmith.Quartz.TextToSchedule
             {
                 matched = true;
             }
+            else if (ExecuteMatch(Grammar.Expression4, text, timeZone, results, Expression4Handler))
+            {
+                matched = true;
+            }
+
 
             if (matched)
             {
@@ -285,7 +290,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
         }
 
         /// <summary>
-        /// Handles with a given text matches the Expression2 field.
+        /// Handles with a given text matches the Expression3 field.
         /// </summary>
         /// <param name="nameValueCollection">A collection of values from the named capture groups.</param>
         /// <param name="results">The results.</param>
@@ -294,9 +299,9 @@ namespace AndrewSmith.Quartz.TextToSchedule
             var time = nameValueCollection["TIME"];
 
             var dateSpec = nameValueCollection["DATESPEC"];
-            var month = nameValueCollection["MONTH"];
-            var day = nameValueCollection["DAY"];
-            var year = nameValueCollection["YEAR"];
+            var monthString = nameValueCollection["MONTH"];
+            var dayString = nameValueCollection["DAY"];
+            var yearString = nameValueCollection["YEAR"];
 
             DateTime date = DateTime.Today; //default date to today
 
@@ -316,11 +321,11 @@ namespace AndrewSmith.Quartz.TextToSchedule
             string cron_dayofWeek = "?";
             string cron_year = null;
 
-            cron_month = GetMonthCronValue(GrammarHelper.GetMonthValue(month));
-            cron_day = day;
+            cron_month = GetMonthCronValue(GrammarHelper.GetMonthValue(monthString));
+            cron_day = GetDayCronValue(GrammarHelper.GetDayValue(dayString));
 
-            if (year != null)
-                cron_year = GetYearCronValue(GrammarHelper.GetYearValue(year));
+            if (yearString != null)
+                cron_year = GetYearCronValue(GrammarHelper.GetYearValue(yearString));
 
 
             //build cron string
@@ -343,6 +348,37 @@ namespace AndrewSmith.Quartz.TextToSchedule
 
                 results.Add(triggerBuilder);
             }
+        }
+
+        /// <summary>
+        /// Handles with a given text matches the Expression4 field.
+        /// </summary>
+        /// <param name="nameValueCollection">A collection of values from the named capture groups.</param>
+        /// <param name="results">The results.</param>
+        private void Expression4Handler(NameValueCollection nameValueCollection, TimeZoneInfo timeZone, TextToScheduleResults results)
+        {
+            // every [n] (days|weeks|months|years) (from [date]) (at [time])
+
+            string amountString = nameValueCollection["AMOUNT"];
+            string intervalString = nameValueCollection["INTERVALUNIT"];
+
+            var dateSpec = nameValueCollection["DATESPEC"];
+            var timeString = nameValueCollection["TIME"];
+
+            DateTime? triggerStartTime = null;
+
+            if (dateSpec != null || timeString != null)
+                triggerStartTime = GrammarHelper.GetDateTimeFromDateSpecAndTime(dateSpec, timeString);
+
+            TriggerBuilder triggerBuilder = TriggerBuilder.Create();
+
+            triggerBuilder.WithSchedule(CreateScheduleWithAmountAndIntervalUnit(amountString, intervalString, timeZone));
+
+            //start on from time
+            if (triggerStartTime != null)
+                triggerBuilder.StartAt(new DateTimeOffset(triggerStartTime.Value, timeZone.GetUtcOffset(triggerStartTime.Value)));
+
+            results.Add(triggerBuilder, null);
         }
 
 
@@ -511,6 +547,15 @@ namespace AndrewSmith.Quartz.TextToSchedule
 
         #region Cron Value Strings
 
+        /// <summary>
+        /// Gets the day cron value.
+        /// </summary>
+        /// <param name="dayValue">The day value.</param>
+        /// <returns></returns>
+        private string GetDayCronValue(int dayValue)
+        {
+            return dayValue.ToString();
+        }
         /// <summary>
         /// Gets the cron year string and converts 2 digit years into 4 digit years.
         /// </summary>
@@ -689,6 +734,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
             b.InTimeZone(timeZone);
             return b;
         }
+
         private IScheduleBuilder CreateScheduleWithCron(string cronExpression, TimeZoneInfo timeZone)
         {
             CronScheduleBuilder sb = CronScheduleBuilder.CronSchedule(cronExpression);

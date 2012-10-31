@@ -34,13 +34,19 @@
         {
             margin-bottom: 50px;
         }
+		body
+		{
+			width: 900px;
+			margin: 0 auto;
+			margin-bottom: 100px;
+		}
     </style>
 </head>
 <body>
 
     <h2>Scheduler Format</h2>
 
-    <p>Currently the schedule support 3 major formats.</p>
+    <p>Currently the schedule support 4 major formats.</p>
 
 
     <pre>"every" [n] (sec|min|hour) ["on" weekdayspec] ["of" monthspec] [time]</pre>
@@ -122,7 +128,34 @@
         <li>every Dec 3rd</li>
         <li>March 2nd at 3:30 pm</li>
     </ul>
+	
+	<hr />
+	
+    <pre>"every" [n] (days|weeks|months|years) ("from" [date]) [time] </pre>
+    <p>Where:</p>
+    <ul>
+		<li><i>N</i>
+             is a numeric amount
+        </li>
+        <li><i>(days|weeks|months|years)</i> 
+            you can use "day" or "days", "year" or "years"...
+        </li>
+        <li><i>date</i> 
+			this is the starting date for the expression. This is a date the is specified as a month then day, with the year as optional 
+            (You can separate the date with or without commas. You may append a st,nd,rd, or th at the end of the day, such as <code>December 25th</code> or <code>December 3rd</code>.)
+        </li>
+        <li><i>time</i> is a single value specified as a time, can be in 12 hour or 24 hour format
+            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm)
+        </li>
+    </ul>
+    <p>Examples:</p>
+    <ul class="example">
+        <li>every 2 weeks at 08:00</li>
+        <li>every 3 days from Jan 3rd, 2012</li>
+        <li>every 2 yr from Sep 3 17:00</li>
+        <li>every 6 weeks</li>
+        <li>every 2 months from February</li>
+    </ul>
     
-
 </body>
 </html>

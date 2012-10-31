@@ -2,6 +2,7 @@
 using Quartz.Impl.Calendar;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -94,6 +95,14 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
                 return global::Quartz.IntervalUnit.Minute;
             else if (RegexHelper.IsFullMatch(intervalUnitString, EnglishGrammar.INTERVALUNIT_HOUR))
                 return  global::Quartz.IntervalUnit.Hour;
+            else if (RegexHelper.IsFullMatch(intervalUnitString, EnglishGrammar.INTERVALUNIT_DAY))
+                return global::Quartz.IntervalUnit.Day;
+            else if (RegexHelper.IsFullMatch(intervalUnitString, EnglishGrammar.INTERVALUNIT_WEEK))
+                return global::Quartz.IntervalUnit.Week;
+            else if (RegexHelper.IsFullMatch(intervalUnitString, EnglishGrammar.INTERVALUNIT_MONTH))
+                return global::Quartz.IntervalUnit.Month;
+            else if (RegexHelper.IsFullMatch(intervalUnitString, EnglishGrammar.INTERVALUNIT_YEAR))
+                return global::Quartz.IntervalUnit.Year;
 
             throw new Exception("Unknown time value string");
         }
@@ -119,19 +128,27 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
             if (datespec == null)
                 return null;
 
-            var matches = RegexHelper.GetNamedMatches(datespec, EnglishGrammar.DATE_SPEC);
+            var matches = RegexHelper.GetNamedMatches(datespec, "^" + EnglishGrammar.DATE_SPEC + "$");
 
             if (matches == null)
                 return null;
 
-            string month = matches["MONTH"];
-            string day = matches["DAY"];
+            string monthString = matches["MONTH"];
+            string dayString = matches["DAY"];
+            string yearString = matches["YEAR"];
 
-            int iMonthValue = GetMonthValue(month);
-            int iDay = int.Parse(day);
+            int iMonthValue = GetMonthValue(monthString);
+            int iDay = 1;
+            
+            if (dayString != null)
+                iDay = int.Parse(dayString);
 
-            int currentYear = DateTime.Now.Year;
-            return new DateTime(currentYear, iMonthValue, iDay);
+            int iYear = DateTime.Now.Year; //current year
+
+            if (yearString != null)
+                iYear = GetYearValue(yearString);
+
+            return new DateTime(iYear, iMonthValue, iDay, 0, 0, 0, 0);
         }
 
         /// <summary>
@@ -414,6 +431,14 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
 
         public int GetMonthValue(string monthName)
         {
+            //check to see if this is a numeric month
+            int iMonth = 0;
+            if (int.TryParse(monthName, out iMonth))
+            {
+                if (iMonth >= 1 && iMonth <= 12)
+                    return iMonth;
+            }
+
             if (RegexHelper.IsFullMatch(monthName, EnglishGrammar.JANUARY))
                 return 1;
             if (RegexHelper.IsFullMatch(monthName, EnglishGrammar.FEBRUARY))
@@ -452,7 +477,21 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
         /// <returns></returns>
         public int GetYearValue(string year)
         {
-            return int.Parse(year);
+            if (year.Length == 2)
+                return CultureInfo.CurrentCulture.Calendar.ToFourDigitYear(int.Parse(year));
+            else
+                return int.Parse(year);
+        }
+
+
+        /// <summary>
+        /// Gets the day value.
+        /// </summary>
+        /// <param name="day">The day.</param>
+        /// <returns></returns>
+        public int GetDayValue(string day)
+        {
+            return int.Parse(day);
         }
     }
 }
