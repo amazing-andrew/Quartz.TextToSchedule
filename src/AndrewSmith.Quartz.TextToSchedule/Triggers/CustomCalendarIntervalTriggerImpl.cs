@@ -1,5 +1,6 @@
 ﻿#if CUSTOM
 
+using AndrewSmith.Quartz.TextToSchedule.Util;
 using Quartz;
 using Quartz.Impl.Triggers;
 using System;
@@ -65,7 +66,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Triggers
             DateTimeOffset sTime = StartTimeUtc;
             if (this.TimeZone != null)
             {
-                sTime = TimeZoneInfo.ConvertTime(sTime, this.TimeZone);
+                sTime = TimeZoneUtil.ConvertTime(sTime, this.TimeZone);
             }
 
             if (RepeatIntervalUnit == IntervalUnit.Second)
@@ -81,9 +82,9 @@ namespace AndrewSmith.Quartz.TextToSchedule.Triggers
                 //*********************************************************************
                 // CUSTOM CODE: Adjust the time if we need to for Daylight Savings Time
                 //*********************************************************************
-                if (this.PreserveHourOfDayAcrossDaylightSavings && TimeZoneInfo.ConvertTime(time.Value, this.TimeZone).Offset != sTime.Offset)
+                if (this.PreserveHourOfDayAcrossDaylightSavings && TimeZoneUtil.ConvertTime(time.Value, this.TimeZone).Offset != sTime.Offset)
                 {
-                    var localTime = TimeZoneInfo.ConvertTime(time.Value, this.TimeZone);
+                    var localTime = TimeZoneUtil.ConvertTime(time.Value, this.TimeZone);
                     var localOffset = localTime.Offset;
                     var startOffset = sTime.Offset;
                     var diff = startOffset - localOffset;
@@ -103,9 +104,9 @@ namespace AndrewSmith.Quartz.TextToSchedule.Triggers
                 //*********************************************************************
                 // CUSTOM CODE: Adjust the time if we need to for Daylight Savings Time
                 //*********************************************************************
-                if (this.PreserveHourOfDayAcrossDaylightSavings && TimeZoneInfo.ConvertTime(time.Value, this.TimeZone).Offset != sTime.Offset)
+                if (this.PreserveHourOfDayAcrossDaylightSavings && TimeZoneUtil.ConvertTime(time.Value, this.TimeZone).Offset != sTime.Offset)
                 {
-                    var localTime = TimeZoneInfo.ConvertTime(time.Value, this.TimeZone);
+                    var localTime = TimeZoneUtil.ConvertTime(time.Value, this.TimeZone);
                     var localOffset = localTime.Offset;
                     var startOffset = sTime.Offset;
                     var diff = startOffset - localOffset;
@@ -126,9 +127,9 @@ namespace AndrewSmith.Quartz.TextToSchedule.Triggers
                 //*********************************************************************
                 // CUSTOM CODE: Adjust the time if we need to for Daylight Savings Time
                 //*********************************************************************
-                if (this.PreserveHourOfDayAcrossDaylightSavings && TimeZoneInfo.ConvertTime(time.Value, this.TimeZone).Offset != sTime.Offset)
+                if (this.PreserveHourOfDayAcrossDaylightSavings && TimeZoneUtil.ConvertTime(time.Value, this.TimeZone).Offset != sTime.Offset)
                 {
-                    var localTime = TimeZoneInfo.ConvertTime(time.Value, this.TimeZone);
+                    var localTime = TimeZoneUtil.ConvertTime(time.Value, this.TimeZone);
                     var localOffset = localTime.Offset;
                     var startOffset = sTime.Offset;
                     var diff = startOffset - localOffset;
@@ -264,7 +265,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Triggers
 
         private bool DaylightSavingHourShiftOccuredAndAdvanceNeeded(ref DateTimeOffset newTime, int initialHourOfDay)
         {
-            DateTimeOffset toCheck = TimeZoneInfo.ConvertTime(newTime, this.TimeZone);
+            DateTimeOffset toCheck = TimeZoneUtil.ConvertTime(newTime, this.TimeZone);
 
             if (PreserveHourOfDayAcrossDaylightSavings && toCheck.Hour != initialHourOfDay)
             {

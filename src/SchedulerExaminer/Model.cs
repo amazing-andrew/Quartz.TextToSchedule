@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using AndrewSmith.Quartz.TextToSchedule;
+using AndrewSmith.Quartz.TextToSchedule.Util;
 
 namespace SchedulerExaminer
 {
@@ -120,7 +121,7 @@ namespace SchedulerExaminer
 
                     foreach (var d in dates)
                     {
-                        list.Add(TimeZoneInfo.ConvertTime(d, m.TimeZone));
+                        list.Add(TimeZoneUtil.ConvertTime(d, m.TimeZone));
                     }
 	            }
 

@@ -65,6 +65,7 @@
     <Compile Include="TextToSchedule.cs" />
     <Compile Include="Grammars\EnglishGrammar.cs" />
     <Compile Include="TextToScheduleFactory.cs" />
+    <Compile Include="Util\TimeZoneUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,5 +1,6 @@
 ﻿#if CUSTOM
 
+using AndrewSmith.Quartz.TextToSchedule.Util;
 using Quartz;
 using Quartz.Impl.Calendar;
 using System;
@@ -62,7 +63,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Calendars
 
             // Get timestamp for 00:00:00
             //DateTime d = timeUtc.Date;   --commented out for local time impl
-            DateTimeOffset d = TimeZoneInfo.ConvertTime(timeUtc, this.TimeZone);
+            DateTimeOffset d = TimeZoneUtil.ConvertTime(timeUtc, this.TimeZone);
 
             if (!IsDayExcluded(d.DayOfWeek))
             {

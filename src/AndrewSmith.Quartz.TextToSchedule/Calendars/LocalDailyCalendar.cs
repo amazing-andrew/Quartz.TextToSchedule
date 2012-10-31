@@ -19,6 +19,7 @@
 
 #if CUSTOM
 
+using AndrewSmith.Quartz.TextToSchedule.Util;
 using Quartz;
 using Quartz.Impl.Calendar;
 using System;
@@ -422,7 +423,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Calendars
 
 
             //CHECK FOR LOCAL TIMES
-            timeUtc = TimeZoneInfo.ConvertTime(timeUtc, this.TimeZone);
+            timeUtc = TimeZoneUtil.ConvertTime(timeUtc, this.TimeZone);
 
             DateTimeOffset startOfDayInMillis = GetStartOfDay(timeUtc);
             DateTimeOffset endOfDayInMillis = GetEndOfDay(timeUtc);
