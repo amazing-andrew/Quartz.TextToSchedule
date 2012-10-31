@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace AndrewSmith.Quartz.TextToSchedule
+namespace AndrewSmith.Quartz.TextToSchedule.Util
 {
     /// <summary>
     /// Helper class to help with common regular expression tasks.

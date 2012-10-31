@@ -63,7 +63,7 @@
     <Compile Include="Triggers\CustomCalendarIntervalTriggerImpl.cs" />
     <Compile Include="Util\NamedFormatHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegexHelper.cs" />
+    <Compile Include="Util\RegexHelper.cs" />
     <Compile Include="TextToScheduleResults.cs" />
     <Compile Include="TextToSchedule.cs" />
     <Compile Include="Grammars\EnglishGrammar.cs" />
