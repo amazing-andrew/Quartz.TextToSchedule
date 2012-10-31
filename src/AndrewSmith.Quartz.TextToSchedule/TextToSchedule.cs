@@ -18,7 +18,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
     /// Default Impl of an <see cref="ITextToSchedule"/>
     /// </summary>
     public class TextToSchedule : ITextToSchedule
-   { 
+    {
         /// <summary>
         /// Gets the grammar associated with this instance.
         /// </summary>
@@ -131,7 +131,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
             var amountString = nameValueCollection["AMOUNT"];
             var intervalUnitString = nameValueCollection["INTERVALUNIT"];
             var startDateString = nameValueCollection["DATESPEC"];
-            
+
             var time = nameValueCollection["TIME"];
             var fromTime = nameValueCollection["FROMTIME"];
             var toTime = nameValueCollection["TOTIME"];
@@ -173,17 +173,17 @@ namespace AndrewSmith.Quartz.TextToSchedule
                 DateTime? timeStartDate = GrammarHelper.GetTimeFromTimeString(time);
                 triggerStartTime = timeStartDate;
             }
-            
+
             //BUILD TRIGGER
             TriggerBuilder triggerBuilder = TriggerBuilder.Create();
 
-            //use custom calendar interval trigger
-            triggerBuilder.WithSchedule(CreateTriggerBasedOnAmountAndTime(amountString, intervalUnitString, timeZone));
+            //set schedule
+            triggerBuilder.WithSchedule(CreateScheduleWithAmountAndIntervalUnit(amountString, intervalUnitString, timeZone));
 
-            
+
             //start on from time
             if (triggerStartTime != null)
-                triggerBuilder.StartAt(new DateTimeOffset(triggerStartTime.Value));
+                triggerBuilder.StartAt(new DateTimeOffset(triggerStartTime.Value, timeZone.GetUtcOffset(triggerStartTime.Value)));
 
             results.Add(triggerBuilder, calendar);
         }
@@ -259,11 +259,11 @@ namespace AndrewSmith.Quartz.TextToSchedule
                     cron_dayofWeek = "?";
 
                     foreach (var o in GrammarHelper.GetOrdinalValues(ordinals))
-	                {
+                    {
                         cron_day = GetOrdinalCronValue(o).Replace("#", "");
                         string cronString = string.Format(string.Join(" ", new string[] { cron_sec, cron_min, cron_hour, cron_day, cron_month, cron_dayofWeek }));
                         cronExpressions.Add(cronString);
-	                }
+                    }
                 }
             }
             else //no ordinal was specified
@@ -271,15 +271,14 @@ namespace AndrewSmith.Quartz.TextToSchedule
                 string cronString = string.Format(string.Join(" ", new string[] { cron_sec, cron_min, cron_hour, cron_day, cron_month, cron_dayofWeek }));
                 cronExpressions.Add(cronString);
             }
-        
-            foreach (var item in cronExpressions)
+
+            foreach (var cron in cronExpressions)
             {
                 var triggerBuilder = TriggerBuilder.Create();
 
-                CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.CronSchedule(item);
-                triggerBuilder.WithSchedule(cronScheduleBuilder);
+                IScheduleBuilder schedule = CreateScheduleWithCron(cron, timeZone);
+                triggerBuilder.WithSchedule(schedule);
 
-                ITrigger trigger = triggerBuilder.Build();
                 results.Add(triggerBuilder);
             }
         }
@@ -324,7 +323,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
 
 
             //build cron string
-            string cronString =  null;
+            string cronString = null;
 
             if (cron_year != null)
                 cronString = string.Format(string.Join(" ", new string[] { cron_sec, cron_min, cron_hour, cron_day, cron_month, cron_dayofWeek, cron_year }));
@@ -334,16 +333,13 @@ namespace AndrewSmith.Quartz.TextToSchedule
             //add cron string
             cronExpressions.Add(cronString);
 
-
-
-            foreach (var item in cronExpressions)
+            foreach (var cron in cronExpressions)
             {
                 var triggerBuilder = TriggerBuilder.Create();
 
-                CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.CronSchedule(item);
-                triggerBuilder.WithSchedule(cronScheduleBuilder);
+                IScheduleBuilder schedule = CreateScheduleWithCron(cron, timeZone);
+                triggerBuilder.WithSchedule(schedule);
 
-                ITrigger trigger = triggerBuilder.Build();
                 results.Add(triggerBuilder);
             }
         }
@@ -371,13 +367,13 @@ namespace AndrewSmith.Quartz.TextToSchedule
                 return true;
             }
 
-            return false;                
+            return false;
         }
 
         #endregion
 
         #region Calendar & Helper Methods
-        
+
         /// <summary>
         /// Builds a <see cref="LocalWeeklyCalendar"/> based on the given allowed days of weeks.
         /// </summary>
@@ -402,7 +398,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
                 calendar = new WeeklyCalendar();
 #endif
 
-            calendar.DaysExcluded = new bool[7] { true, true, true, true, true, true, true};
+            calendar.DaysExcluded = new bool[7] { true, true, true, true, true, true, true };
 
             var dayOfWeeks = GrammarHelper.GetDayOfWeekValues(dayofWeekSpecs);
 
@@ -428,7 +424,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
 
             DateTime fromTime = dFromTime.Value;
             DateTime toTime = dToTime.Value;
-            
+
             //adjust the utc month,day,year to match each other
             toTime = new DateTime(fromTime.Year, fromTime.Month, fromTime.Day, toTime.Hour, toTime.Minute, toTime.Second, toTime.Millisecond);
 
@@ -448,7 +444,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
                 //TODO: do something about this hacking the extra second
                 if (fromTime.Equals(toTime))
                 {
-                    toTime = toTime.AddSeconds(1); 
+                    toTime = toTime.AddSeconds(1);
                 }
                 shouldInvertTimeRange = true; //turn this into an inclusive range
             }
@@ -582,7 +578,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
                     break;
                 default:
                     throw new Exception(string.Format("Invalid Month Value of {0}", monthValue));
-                    //break;
+                //break;
             }
 
             return monthString;
@@ -619,7 +615,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
                     break;
                 default:
                     throw new Exception("Invalid Ordinal Value");
-                    //break;
+                //break;
             }
 
             return ordinalValue;
@@ -659,7 +655,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
                     break;
                 default:
                     throw new Exception("Invalid Day Of Week Value");
-                    //break;
+                //break;
             }
 
             return dowValue;
@@ -669,7 +665,9 @@ namespace AndrewSmith.Quartz.TextToSchedule
 
         #endregion
 
-        public IScheduleBuilder CreateTriggerBasedOnAmountAndTime(string amountString, string intervalUnitString, TimeZoneInfo timeZone)
+        #region Schedules Methods
+
+        private IScheduleBuilder CreateScheduleWithAmountAndIntervalUnit(string amountString, string intervalUnitString, TimeZoneInfo timeZone)
         {
             var intervalUnit = GrammarHelper.GetIntervalUnitValueFromString(intervalUnitString);
 
@@ -690,7 +688,13 @@ namespace AndrewSmith.Quartz.TextToSchedule
             b.InTimeZone(timeZone);
             return b;
         }
+        private IScheduleBuilder CreateScheduleWithCron(string cronExpression, TimeZoneInfo timeZone)
+        {
+            CronScheduleBuilder sb = CronScheduleBuilder.CronSchedule(cronExpression);
+            sb.InTimeZone(timeZone);
+            return sb;
+        }
 
-
-   }
+        #endregion
+    }
 }
