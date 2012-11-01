@@ -61,11 +61,11 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
         public static readonly string FEBRUARY = "(feb|february)";
         public static readonly string MARCH = "(mar|march)";
         public static readonly string APRIL = "(apr|april)";
-        public static readonly string MAY = "(may|may)";
+        public static readonly string MAY = "(may)";
         public static readonly string JUNE = "(jun|june)";
         public static readonly string JULY = "(jul|july)";
         public static readonly string AUGUST = "(aug|august)";
-        public static readonly string SEPTEMBER = "(sep|september)";
+        public static readonly string SEPTEMBER = "(sep|sept|september)";
         public static readonly string OCTOBER = "(oct|october)";
         public static readonly string NOVEMBER = "(nov|november)";
         public static readonly string DECEMBER = "(dec|december)";
