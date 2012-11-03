@@ -8,6 +8,12 @@ This is the README file for AndrewSmith.Quartz.TextToSchedule.
 
 This is a library that is used to translate plain english into a schedule that can be used by Quartz.Net.
 
+You can learn more about the plain english syntax by going here.
+
+https://github.com/amazing-andrew/AndrewSmith.Quartz.TextToSchedule/wiki/Scheduler-Format
+
+
+
 Quartz.Net Library
 
     http://quartznet.sourceforge.net 
