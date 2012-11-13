@@ -13,7 +13,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
     public class EnglishGrammar : IGrammar
     {
         //public static readonly string SPACE = @"\ ";
-        public static readonly string LIST_SEPARATOR = @"( ?, ?| ?; ?| ?\/ ?| ?\\ ?| ?\  ?|\ ?and\ ?)";
+        public static readonly string LIST_SEPARATOR = @"( ?, ?| ?; ?| ?\/ ?| ?\\ ?| ?\  ?|\ ?,?\ ?and\ ?)";
         public static readonly string RANGE_SEPARATOR = "( through | thru | ?- ?)";
         public static readonly string AMOUNT = @"(?<AMOUNT>\d+)";
 
