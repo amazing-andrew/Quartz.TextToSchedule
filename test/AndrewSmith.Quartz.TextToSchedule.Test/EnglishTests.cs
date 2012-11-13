@@ -16,7 +16,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
 
         public EnglishTests()
         {
-            tts = TextToScheduleFactory.CreateEnglishParser();
+            tts = new TextToScheduleFactory().CreateEnglishParser();
         }
 
         [TestMethod]

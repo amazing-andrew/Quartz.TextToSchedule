@@ -16,7 +16,7 @@ namespace ExampleApp
             string scheduleText = "every 2 seconds";
             Console.WriteLine("Running schedule of \"{0}\"", scheduleText);
 
-            ITextToSchedule parser = TextToScheduleFactory.CreateEnglishParser();
+            ITextToSchedule parser = new TextToScheduleFactory().CreateEnglishParser();
             TextToScheduleResults results = parser.Parse(scheduleText);
 
             //create & start the scheduler

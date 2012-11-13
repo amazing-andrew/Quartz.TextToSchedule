@@ -16,7 +16,7 @@ namespace AndrewSmith.Quartz.TextToSchedule
         /// Creates an <see cref="ITextToSchedule"/> that parses English.
         /// </summary>
         /// <returns></returns>
-        public static ITextToSchedule CreateEnglishParser()
+        public ITextToSchedule CreateEnglishParser()
         {
             return new TextToSchedule(new EnglishGrammar(), new EnglishGrammarHelper());
         }

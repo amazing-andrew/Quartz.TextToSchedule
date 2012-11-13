@@ -29,7 +29,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Test
 
         public GoogleAppEngineSyntaxTests()
         {
-            tts = TextToScheduleFactory.CreateEnglishParser();
+            tts = new TextToScheduleFactory().CreateEnglishParser();
         }
 
         [TestMethod]

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using AndrewSmith.Quartz.TextToSchedule;
 using AndrewSmith.Quartz.TextToSchedule.Util;
+using AndrewSmith.Quartz.TextToSchedule.Grammars;
 
 namespace SchedulerExaminer
 {
@@ -19,6 +20,8 @@ namespace SchedulerExaminer
     public class Model : DependencyObject
     {
         public const int MaxResultsToReturn = 500;
+
+        #region Dependency Properties
 
         public string Input
         {
@@ -53,10 +56,7 @@ namespace SchedulerExaminer
         // Using a DependencyProperty as the backing store for Triggers.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TriggersProperty =
             DependencyProperty.Register("Triggers", typeof(ObservableCollection<string>), typeof(Model), new PropertyMetadata(null));
-
-
-
-
+        
         public TimeZoneInfo TimeZone
         {
             get { return (TimeZoneInfo)GetValue(TimeZoneProperty); }
@@ -67,6 +67,7 @@ namespace SchedulerExaminer
         public static readonly DependencyProperty TimeZoneProperty =
             DependencyProperty.Register("TimeZone", typeof(TimeZoneInfo), typeof(Model), new FrameworkPropertyMetadata(TimeZoneInfo.Local, new PropertyChangedCallback(InputChanged)));
 
+        #endregion
 
         public Model()
         {
@@ -80,6 +81,11 @@ namespace SchedulerExaminer
 
             TextToScheduleResults results = null;
 
+            TextToScheduleFactory parserFactory = new TextToScheduleFactory();
+            var englishParser = parserFactory.CreateEnglishParser();
+            var germanParser = parserFactory.CreateGermanParser();
+
+
             try
             {
                 CronExpression cron = new CronExpression(m.Input);
@@ -90,17 +96,14 @@ namespace SchedulerExaminer
             }
             catch
             {
-                var english = TextToScheduleFactory.CreateEnglishParser();
-                results = english.Parse(m.Input, m.TimeZone);
+                results = englishParser.Parse(m.Input, m.TimeZone);
             }
 
             if (results == null)
             {
                 try
                 {
-                    //try german verion
-                    var german = new TextToSchedule(new AndrewSmith.Quartz.TextToSchedule.Grammars.GermanGrammar(), new AndrewSmith.Quartz.TextToSchedule.Grammars.GermanGrammarHelper());
-                    results = german.Parse(m.Input, m.TimeZone);
+                    results = germanParser.Parse(m.Input, m.TimeZone);
                 }
                 catch
                 {
