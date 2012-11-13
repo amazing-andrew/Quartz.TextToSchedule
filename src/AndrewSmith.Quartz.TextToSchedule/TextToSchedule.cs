@@ -322,7 +322,11 @@ namespace AndrewSmith.Quartz.TextToSchedule
             string cron_year = null;
 
             cron_month = GetMonthCronValue(GrammarHelper.GetMonthValue(monthString));
-            cron_day = GetDayCronValue(GrammarHelper.GetDayValue(dayString));
+
+            if (dayString != null)
+                cron_day = GetDayCronValue(GrammarHelper.GetDayValue(dayString));
+            else
+                cron_day = GetDayCronValue(1);
 
             if (yearString != null)
                 cron_year = GetYearCronValue(GrammarHelper.GetYearValue(yearString));
@@ -472,8 +476,8 @@ namespace AndrewSmith.Quartz.TextToSchedule
             {
                 //switch the from and to times
                 DateTime fromTemp = fromTime;
-                fromTime = toTime;
-                toTime = fromTemp;
+                fromTime = toTime.AddMilliseconds(1);
+                toTime = fromTemp.AddMilliseconds(-1);
             }
             else
             {

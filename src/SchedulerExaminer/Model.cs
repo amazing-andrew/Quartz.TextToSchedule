@@ -18,7 +18,7 @@ namespace SchedulerExaminer
     /// </summary>
     public class Model : DependencyObject
     {
-        public const int MaxResultsToReturn = 200;
+        public const int MaxResultsToReturn = 500;
 
         public string Input
         {

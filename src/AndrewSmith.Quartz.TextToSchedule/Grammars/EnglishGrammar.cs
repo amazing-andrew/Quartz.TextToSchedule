@@ -106,7 +106,7 @@ namespace AndrewSmith.Quartz.TextToSchedule.Grammars
         public static readonly string TIME = @"(?<TIME>{TIME_HOUR}((:| ){TIME_MINUTE})?((:| ){TIME_SECOND})? ?{TIME_MERIDIEM}?)";
 
         public static readonly string TIME_ONCE = "((at )?{TIME})";
-        public static readonly string TIME_RANGE = "(from (?<FROMTIME>{TIME}) to (?<TOTIME>{TIME}))";
+        public static readonly string TIME_RANGE = "((from (?<FROMTIME>{TIME}) to (?<TOTIME>{TIME}))|(between (?<FROMTIME>{TIME}) and (?<TOTIME>{TIME})))";
         public static readonly string TIME_SPEC = RegexHelper.Builder_GroupOf("TIMESPEC", new string[] { TIME_ONCE, TIME_RANGE });
 
         #endregion
