@@ -201,81 +201,86 @@ namespace Quartz.TextToSchedule
         /// <param name="results">The results.</param>
         private void Expression2Handler(NameValueCollection nameValueCollection, TimeZoneInfo timeZone, TextToScheduleResults results)
         {
-            var time = nameValueCollection["TIME"];
-            var fromTime = nameValueCollection["FROMTIME"];
-            var toTime = nameValueCollection["TOTIME"];
+            var timesToFire = nameValueCollection.GetValues("TIME");
 
             var dayOfWeekSpecs = nameValueCollection.GetValues("DAYOFWEEK");
             var monthSpecs = nameValueCollection.GetValues("MONTH");
 
             var ordinals = nameValueCollection.GetValues("ORDINAL");
 
-            DateTime date = DateTime.Today; //default date to today
-
-            if (time != null)
-            {
-                date = GrammarHelper.GetTimeFromTimeString(time).Value;
-            }
-
             //init cron values
             List<string> cronExpressions = new List<string>();
 
-            string cron_sec = date.Second.ToString();
-            string cron_min = date.Minute.ToString();
-            string cron_hour = date.Hour.ToString();
-            string cron_day = "?";
-            string cron_month = "*";
-            string cron_dayofWeek = "*";
 
-            if (monthSpecs != null)
-            {
-                var months = GrammarHelper.GetMonthValues(monthSpecs);
-                cron_month = string.Join(",", months.Select(mon => GetMonthCronValue(mon)));
-            }
+            if (timesToFire == null) // if times are not specified assume midnight
+                timesToFire = new string[] { "00:00" };
 
-            if (dayOfWeekSpecs != null)
+            foreach (var time in timesToFire)
             {
-                var dows = GrammarHelper.GetDayOfWeekValues(dayOfWeekSpecs);
-                cron_dayofWeek = string.Join(",", dows.Select(x => GetDayOfWeekCronValue(x)));
-            }
+                DateTime date = DateTime.Today; //default date to today
 
-            if (ordinals != null)
-            {
+                if (time != null)
+                {
+                    date = GrammarHelper.GetTimeFromTimeString(time).Value;
+                }
+
+                string cron_sec = date.Second.ToString();
+                string cron_min = date.Minute.ToString();
+                string cron_hour = date.Hour.ToString();
+                string cron_day = "?";
+                string cron_month = "*";
+                string cron_dayofWeek = "*";
+
+                if (monthSpecs != null)
+                {
+                    var months = GrammarHelper.GetMonthValues(monthSpecs);
+                    cron_month = string.Join(",", months.Select(mon => GetMonthCronValue(mon)));
+                }
+
                 if (dayOfWeekSpecs != null)
                 {
-                    //combine ordinals and dayOfWeeks
-                    var combined =
-                        from a in GrammarHelper.GetOrdinalValues(ordinals)
-                        from b in GrammarHelper.GetDayOfWeekValues(dayOfWeekSpecs)
-                        select new { Ordinal = a, DayOfWeek = b };
-
-                    foreach (var item in combined)
-                    {
-                        cron_dayofWeek = GetDayOfWeekCronValue(item.DayOfWeek);
-                        cron_dayofWeek += GetOrdinalCronValue(item.Ordinal);
-
-                        string cronString = string.Format(string.Join(" ", new string[] { cron_sec, cron_min, cron_hour, cron_day, cron_month, cron_dayofWeek }));
-                        cronExpressions.Add(cronString);
-                    }
+                    var dows = GrammarHelper.GetDayOfWeekValues(dayOfWeekSpecs);
+                    cron_dayofWeek = string.Join(",", dows.Select(x => GetDayOfWeekCronValue(x)));
                 }
 
-                if (dayOfWeekSpecs == null) //day was specified, handle special case
+                if (ordinals != null)
                 {
-                    //handle special cases
-                    cron_dayofWeek = "?";
-
-                    foreach (var o in GrammarHelper.GetOrdinalValues(ordinals))
+                    if (dayOfWeekSpecs != null)
                     {
-                        cron_day = GetOrdinalCronValue(o).Replace("#", "");
-                        string cronString = string.Format(string.Join(" ", new string[] { cron_sec, cron_min, cron_hour, cron_day, cron_month, cron_dayofWeek }));
-                        cronExpressions.Add(cronString);
+                        //combine ordinals and dayOfWeeks
+                        var combined =
+                            from a in GrammarHelper.GetOrdinalValues(ordinals)
+                            from b in GrammarHelper.GetDayOfWeekValues(dayOfWeekSpecs)
+                            select new { Ordinal = a, DayOfWeek = b };
+
+                        foreach (var item in combined)
+                        {
+                            cron_dayofWeek = GetDayOfWeekCronValue(item.DayOfWeek);
+                            cron_dayofWeek += GetOrdinalCronValue(item.Ordinal);
+
+                            string cronString = string.Format(string.Join(" ", new string[] { cron_sec, cron_min, cron_hour, cron_day, cron_month, cron_dayofWeek }));
+                            cronExpressions.Add(cronString);
+                        }
+                    }
+
+                    if (dayOfWeekSpecs == null) //day was specified, handle special case
+                    {
+                        //handle special cases
+                        cron_dayofWeek = "?";
+
+                        foreach (var o in GrammarHelper.GetOrdinalValues(ordinals))
+                        {
+                            cron_day = GetOrdinalCronValue(o).Replace("#", "");
+                            string cronString = string.Format(string.Join(" ", new string[] { cron_sec, cron_min, cron_hour, cron_day, cron_month, cron_dayofWeek }));
+                            cronExpressions.Add(cronString);
+                        }
                     }
                 }
-            }
-            else //no ordinal was specified
-            {
-                string cronString = string.Format(string.Join(" ", new string[] { cron_sec, cron_min, cron_hour, cron_day, cron_month, cron_dayofWeek }));
-                cronExpressions.Add(cronString);
+                else //no ordinal was specified
+                {
+                    string cronString = string.Format(string.Join(" ", new string[] { cron_sec, cron_min, cron_hour, cron_day, cron_month, cron_dayofWeek }));
+                    cronExpressions.Add(cronString);
+                }
             }
 
             foreach (var cron in cronExpressions)
@@ -296,52 +301,58 @@ namespace Quartz.TextToSchedule
         /// <param name="results">The results.</param>
         private void Expression3Handler(NameValueCollection nameValueCollection, TimeZoneInfo timeZone, TextToScheduleResults results)
         {
-            var time = nameValueCollection["TIME"];
+            var timesToFire = nameValueCollection.GetValues("TIME");
 
             var dateSpec = nameValueCollection["DATESPEC"];
             var monthString = nameValueCollection["MONTH"];
             var dayString = nameValueCollection["DAY"];
             var yearString = nameValueCollection["YEAR"];
 
-            DateTime date = DateTime.Today; //default date to today
-
-            if (time != null)
-            {
-                date = GrammarHelper.GetTimeFromTimeString(time).Value;
-            }
-
             //init cron values
             List<string> cronExpressions = new List<string>();
 
-            string cron_sec = date.Second.ToString();
-            string cron_min = date.Minute.ToString();
-            string cron_hour = date.Hour.ToString();
-            string cron_day = "*";
-            string cron_month = "*";
-            string cron_dayofWeek = "?";
-            string cron_year = null;
+            if (timesToFire == null) // if times are not specified assume midnight
+                timesToFire = new string[] { "00:00" };
 
-            cron_month = GetMonthCronValue(GrammarHelper.GetMonthValue(monthString));
+            foreach (var time in timesToFire)
+            {
+                DateTime date = DateTime.Today; //default date to today
 
-            if (dayString != null)
-                cron_day = GetDayCronValue(GrammarHelper.GetDayValue(dayString));
-            else
-                cron_day = GetDayCronValue(1);
+                if (time != null)
+                {
+                    date = GrammarHelper.GetTimeFromTimeString(time).Value;
+                }
 
-            if (yearString != null)
-                cron_year = GetYearCronValue(GrammarHelper.GetYearValue(yearString));
+                string cron_sec = date.Second.ToString();
+                string cron_min = date.Minute.ToString();
+                string cron_hour = date.Hour.ToString();
+                string cron_day = "*";
+                string cron_month = "*";
+                string cron_dayofWeek = "?";
+                string cron_year = null;
+
+                cron_month = GetMonthCronValue(GrammarHelper.GetMonthValue(monthString));
+
+                if (dayString != null)
+                    cron_day = GetDayCronValue(GrammarHelper.GetDayValue(dayString));
+                else
+                    cron_day = GetDayCronValue(1);
+
+                if (yearString != null)
+                    cron_year = GetYearCronValue(GrammarHelper.GetYearValue(yearString));
 
 
-            //build cron string
-            string cronString = null;
+                //build cron string
+                string cronString = null;
 
-            if (cron_year != null)
-                cronString = string.Format(string.Join(" ", new string[] { cron_sec, cron_min, cron_hour, cron_day, cron_month, cron_dayofWeek, cron_year }));
-            else
-                cronString = string.Format(string.Join(" ", new string[] { cron_sec, cron_min, cron_hour, cron_day, cron_month, cron_dayofWeek }));
+                if (cron_year != null)
+                    cronString = string.Format(string.Join(" ", new string[] { cron_sec, cron_min, cron_hour, cron_day, cron_month, cron_dayofWeek, cron_year }));
+                else
+                    cronString = string.Format(string.Join(" ", new string[] { cron_sec, cron_min, cron_hour, cron_day, cron_month, cron_dayofWeek }));
 
-            //add cron string
-            cronExpressions.Add(cronString);
+                //add cron string
+                cronExpressions.Add(cronString);
+            }
 
             foreach (var cron in cronExpressions)
             {
@@ -367,22 +378,29 @@ namespace Quartz.TextToSchedule
             string intervalString = nameValueCollection["INTERVALUNIT"];
 
             var dateSpec = nameValueCollection["DATESPEC"];
-            var timeString = nameValueCollection["TIME"];
+            var timesToFire = nameValueCollection.GetValues("TIME");
+
 
             DateTime? triggerStartTime = null;
 
-            if (dateSpec != null || timeString != null)
-                triggerStartTime = GrammarHelper.GetDateTimeFromDateSpecAndTime(dateSpec, timeString);
+            if (timesToFire == null) // if times are not specified assume midnight
+                timesToFire = new string[] { "00:00" };
 
-            TriggerBuilder triggerBuilder = TriggerBuilder.Create();
+            foreach (var timeString in timesToFire)
+            {
+                if (dateSpec != null || timeString != null)
+                    triggerStartTime = GrammarHelper.GetDateTimeFromDateSpecAndTime(dateSpec, timeString);
 
-            triggerBuilder.WithSchedule(CreateScheduleWithAmountAndIntervalUnit(amountString, intervalString, timeZone));
+                TriggerBuilder triggerBuilder = TriggerBuilder.Create();
 
-            //start on from time
-            if (triggerStartTime != null)
-                triggerBuilder.StartAt(new DateTimeOffset(triggerStartTime.Value, timeZone.GetUtcOffset(triggerStartTime.Value)));
+                triggerBuilder.WithSchedule(CreateScheduleWithAmountAndIntervalUnit(amountString, intervalString, timeZone));
 
-            results.Add(triggerBuilder, null);
+                //start on from time
+                if (triggerStartTime != null)
+                    triggerBuilder.StartAt(new DateTimeOffset(triggerStartTime.Value, timeZone.GetUtcOffset(triggerStartTime.Value)));
+
+                results.Add(triggerBuilder, null);
+            }
         }
 
 

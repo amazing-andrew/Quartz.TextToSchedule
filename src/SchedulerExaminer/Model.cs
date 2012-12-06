@@ -85,32 +85,18 @@ namespace SchedulerExaminer
             var englishParser = parserFactory.CreateEnglishParser();
             var germanParser = parserFactory.CreateGermanParser();
 
+            string text = m.Input;
 
-            try
+            if (englishParser.IsValid(text))
+                results = englishParser.Parse(text);
+            else if (germanParser.IsValid(text))
+                results = germanParser.Parse(text);
+            else if (CronExpression.IsValidExpression(text))
             {
-                CronExpression cron = new CronExpression(m.Input);
                 results = new TextToScheduleResults();
-                results.Add(TriggerBuilder.Create()
-                    .WithCronSchedule(m.Input, tb =>
-                        tb.InTimeZone(m.TimeZone)));
+                results.Add(TriggerBuilder.Create().WithCronSchedule(text, tb => tb.InTimeZone(m.TimeZone)));
             }
-            catch
-            {
-                results = englishParser.Parse(m.Input, m.TimeZone);
-            }
-
-            if (results == null)
-            {
-                try
-                {
-                    results = germanParser.Parse(m.Input, m.TimeZone);
-                }
-                catch
-                {
-
-                }
-            }
-            
+                            
 
             if (results != null)
             {
