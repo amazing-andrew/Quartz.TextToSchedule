@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{058CF660-BB84-4B39-BAE5-9EBE0488F107}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndrewSmith.Quartz.TextToSchedule", "src\AndrewSmith.Quartz.TextToSchedule\AndrewSmith.Quartz.TextToSchedule.csproj", "{E58DE5CF-B066-40C4-AAA8-88620D91DE9E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quartz.TextToSchedule", "src\Quartz.TextToSchedule\Quartz.TextToSchedule.csproj", "{E58DE5CF-B066-40C4-AAA8-88620D91DE9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndrewSmith.Quartz.TextToSchedule.Test", "test\AndrewSmith.Quartz.TextToSchedule.Test\AndrewSmith.Quartz.TextToSchedule.Test.csproj", "{9782FEA1-FC28-4058-B4FC-30F980DAC7FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quartz.TextToSchedule.Test", "src\Quartz.TextToSchedule.Test\Quartz.TextToSchedule.Test.csproj", "{9782FEA1-FC28-4058-B4FC-30F980DAC7FB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{00737B36-5FD1-4D63-961D-7B9EA960D440}"
 EndProject
@@ -13,11 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchedulerExaminer", "src\Sc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleLanguage", "SampleLanguage", "{78484D55-ED58-48E9-A3D5-313DDC06D233}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndrewSmith.Quartz.TextToSchedule.Sample.German", "sample-language\AndrewSmith.TextToSchedule.Sample.German\AndrewSmith.Quartz.TextToSchedule.Sample.German.csproj", "{B7DF7106-188E-43E5-8C31-C384A415B086}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quartz.TextToSchedule.Sample.German", "src\Quartz.TextToSchedule.Sample.German\Quartz.TextToSchedule.Sample.German.csproj", "{B7DF7106-188E-43E5-8C31-C384A415B086}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{F106976A-83E7-478F-AF96-B2D888F10515}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleApp", "examples\ExampleApp\ExampleApp.csproj", "{936AB2C1-D3F2-4E5A-850A-0B00DF121DDA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleApp", "src\ExampleApp\ExampleApp.csproj", "{936AB2C1-D3F2-4E5A-850A-0B00DF121DDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

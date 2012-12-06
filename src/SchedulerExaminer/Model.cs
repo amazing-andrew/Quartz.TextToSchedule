@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using AndrewSmith.Quartz.TextToSchedule;
-using AndrewSmith.Quartz.TextToSchedule.Util;
-using AndrewSmith.Quartz.TextToSchedule.Grammars;
+using Quartz.TextToSchedule;
+using Quartz.TextToSchedule.Util;
+using Quartz.TextToSchedule.Grammars;
 
 namespace SchedulerExaminer
 {

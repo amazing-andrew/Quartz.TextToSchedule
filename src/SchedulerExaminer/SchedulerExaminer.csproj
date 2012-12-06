@@ -106,13 +106,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\sample-language\AndrewSmith.TextToSchedule.Sample.German\AndrewSmith.Quartz.TextToSchedule.Sample.German.csproj">
+    <ProjectReference Include="..\Quartz.TextToSchedule.Sample.German\Quartz.TextToSchedule.Sample.German.csproj">
       <Project>{b7df7106-188e-43e5-8c31-c384a415b086}</Project>
-      <Name>AndrewSmith.Quartz.TextToSchedule.Sample.German</Name>
+      <Name>Quartz.TextToSchedule.Sample.German</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\AndrewSmith.Quartz.TextToSchedule\AndrewSmith.Quartz.TextToSchedule.csproj">
+    <ProjectReference Include="..\Quartz.TextToSchedule\Quartz.TextToSchedule.csproj">
       <Project>{e58de5cf-b066-40c4-aaa8-88620d91de9e}</Project>
-      <Name>AndrewSmith.Quartz.TextToSchedule</Name>
+      <Name>Quartz.TextToSchedule</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
