@@ -10,7 +10,7 @@ This is a library that is used to translate plain english into a schedule that c
 
 You can learn more about the plain english syntax by going here.
 
-https://github.com/amazing-andrew/AndrewSmith.Quartz.TextToSchedule/wiki/Scheduler-Format
+[Scheduler Format Documentation](http://htmlpreview.github.com/?https://github.com/amazing-andrew/AndrewSmith.Quartz.TextToSchedule/master/documentation/SchedulerFormat.htm)
 
 
 
