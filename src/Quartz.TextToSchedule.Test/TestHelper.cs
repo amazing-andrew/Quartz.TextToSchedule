@@ -105,6 +105,30 @@ namespace Quartz.TextToSchedule.Test
             Assert.IsFalse(dailyCal.IsTimeIncluded(date), "{0} as expected to be excluded in the daily calendar but wasn't", date);
         }
 
+        public static void AssertHasStartTimeOfDayOf(ITrigger trigger, int hour, int minute, int second)
+        {
+            TimeZoneInfo tz = TimeZoneInfo.Local;
+            DateTimeOffset now = DateTimeOffset.Now;
+            DateTimeOffset date = new DateTimeOffset(now.Year, now.Month, now.Day, hour, minute, second, TimeSpan.Zero);
+            date = new DateTimeOffset(date.DateTime, tz.GetUtcOffset(date.DateTime));
+
+            DateTimeOffset triggerDate = Quartz.TextToSchedule.Util.TimeZoneUtil.ConvertTime(trigger.StartTimeUtc, tz);
+
+            Assert.AreEqual(triggerDate.Hour, date.Hour);
+            Assert.AreEqual(triggerDate.Minute, date.Minute);
+            Assert.AreEqual(triggerDate.Second, date.Second);
+        }
+
+        public static void AssertHasStartDateOf(ITrigger trigger, int year, int month, int day, int hour, int minute, int second)
+        {
+            TimeZoneInfo tz = TimeZoneInfo.Local;
+            DateTimeOffset date = new DateTimeOffset(year, month, day, hour, minute, second, TimeSpan.Zero);
+            date = new DateTimeOffset(date.DateTime, tz.GetUtcOffset(date.DateTime));
+
+            Assert.AreEqual(trigger.StartTimeUtc, date);
+        }
+
+
         private static T FindCalendarOfType<T>(RegisterGroup group) where T : ICalendar
         {
             bool found = false;

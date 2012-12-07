@@ -247,9 +247,9 @@ namespace Quartz.TextToSchedule.Test
         }
 
         [TestMethod]
-        public void Every2ndMondayAt3am7am()
+        public void SecondMondayAt3am7am()
         {
-            string text = "2nd Monday of month at 3am, 7am";
+            string text = "Second Monday of month at 3am, 7am";
             var results = tts.Parse(text);
 
             Assert.AreEqual(2, results.RegisterGroups.Count);
@@ -257,5 +257,54 @@ namespace Quartz.TextToSchedule.Test
             TestHelper.AssertHasCronExpression(results, "0 0 3 ? * MON#2");
             TestHelper.AssertHasCronExpression(results, "0 0 7 ? * MON#2");
         }
+
+        [TestMethod]
+        public void Every2Weeks()
+        {
+            string text = "every 2 weeks";
+            var results = tts.Parse(text);
+
+            Assert.AreEqual(1, results.RegisterGroups.Count);
+            var group = results.RegisterGroups[0];
+            var trigger = group.TriggerBuilder.Build();
+
+            TestHelper.AssertHasTimeIntervalOf(trigger, 2, IntervalUnit.Week);
+        }
+
+        [TestMethod]
+        public void Every4YearsFromJan1stAt7am()
+        {
+            string text = "every 4 years from Jan 1st 2011 at 7AM";
+            var results = tts.Parse(text);
+
+            Assert.AreEqual(1, results.RegisterGroups.Count);
+            var group = results.RegisterGroups[0];
+            var trigger = group.TriggerBuilder.Build();
+
+            TestHelper.AssertHasTimeIntervalOf(trigger, 4, IntervalUnit.Year);
+            TestHelper.AssertHasStartDateOf(trigger, 2011, 1, 1, 7, 0, 0);
+        }
+
+        [TestMethod]
+        public void Every4YearsFromJan1stAt7amAnd830AM()
+        {
+            string text = "every 4 years from Jan 1st 2011 at 7AM, 8:30 AM";
+            var results = tts.Parse(text);
+
+            Assert.AreEqual(2, results.RegisterGroups.Count);
+
+            var group1 = results.RegisterGroups[0];
+            var trigger1 = group1.TriggerBuilder.Build();
+
+            var group2 = results.RegisterGroups[1];
+            var trigger2 = group2.TriggerBuilder.Build();
+
+            TestHelper.AssertHasTimeIntervalOf(trigger1, 4, IntervalUnit.Year);
+            TestHelper.AssertHasStartDateOf(trigger1, 2011, 1, 1, 7, 0, 0);
+
+            TestHelper.AssertHasTimeIntervalOf(trigger2, 4, IntervalUnit.Year);
+            TestHelper.AssertHasStartDateOf(trigger2, 2011, 1, 1, 8, 30, 0);
+        }
+
     }
 }

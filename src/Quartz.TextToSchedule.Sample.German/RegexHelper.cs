@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Quartz.TextToSchedule.Sample.German
 {
-    internal class RegexHelper
+    internal static class RegexHelper
     {
         #region Matching
 

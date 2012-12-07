@@ -52,6 +52,7 @@
     <Compile Include="GermanGrammar.cs" />
     <Compile Include="GermanGrammarFactoryExtension.cs" />
     <Compile Include="GermanGrammarHelper.cs" />
+    <Compile Include="NamedFormatHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegexHelper.cs" />
   </ItemGroup>

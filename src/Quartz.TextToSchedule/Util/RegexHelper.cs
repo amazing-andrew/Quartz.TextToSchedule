@@ -11,7 +11,7 @@ namespace Quartz.TextToSchedule.Util
     /// <summary>
     /// Helper class to help with common regular expression tasks.
     /// </summary>
-    internal class RegexHelper
+    internal static class RegexHelper
     {
         #region Matching
 

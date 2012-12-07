@@ -263,7 +263,7 @@ namespace Quartz.TextToSchedule
                         }
                     }
 
-                    if (dayOfWeekSpecs == null) //day was specified, handle special case
+                    if (dayOfWeekSpecs == null) //"day" was specified as DOW, handle special case
                     {
                         //handle special cases
                         cron_dayofWeek = "?";

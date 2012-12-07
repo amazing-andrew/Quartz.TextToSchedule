@@ -143,8 +143,10 @@ namespace Quartz.TextToSchedule.Test
 
             Assert.AreEqual(1, results.RegisterGroups.Count);
             var group = results.RegisterGroups[0];
+            var trigger = group.TriggerBuilder.Build();
 
-            //todo:not sure how to validate this one
+            TestHelper.AssertHasTimeIntervalOf(trigger, 2, IntervalUnit.Hour);
+            TestHelper.AssertHasStartTimeOfDayOf(trigger, 0, 0, 0);
         }
     }
 }
