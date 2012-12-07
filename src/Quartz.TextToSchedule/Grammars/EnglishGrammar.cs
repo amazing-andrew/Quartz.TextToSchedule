@@ -32,10 +32,11 @@ namespace Quartz.TextToSchedule.Grammars
 
         public static readonly string INTERVALUNIT_TIME = RegexHelper.Builder_GroupOf("INTERVALUNIT", new string[] { INTERVALUNIT_SECOND, INTERVALUNIT_MINUTE, INTERVALUNIT_HOUR });
         public static readonly string INTERVALUNIT_DATE = RegexHelper.Builder_GroupOf("INTERVALUNIT", new string[] { INTERVALUNIT_DAY, INTERVALUNIT_WEEK, INTERVALUNIT_MONTH, INTERVALUNIT_YEAR });
+        public static readonly string INTERVALUNIT_ALL = RegexHelper.Builder_GroupOf("INTERVALUNIT", new string[] { INTERVALUNIT_SECOND, INTERVALUNIT_MINUTE, INTERVALUNIT_HOUR, INTERVALUNIT_DAY, INTERVALUNIT_WEEK, INTERVALUNIT_MONTH, INTERVALUNIT_YEAR });
 
         #endregion
 
-        #region Patterns - DAYOF WEEK
+        #region Patterns - DAY OF WEEK
 
         //DAYOFWEEK
         public static readonly string MONDAY = @"(mon|monday)";
@@ -201,8 +202,8 @@ namespace Quartz.TextToSchedule.Grammars
         //[every|on] (date) [time]
         public static readonly string SpecialExpr3 = @"(((every|on) )?{DATE_SPEC}( {TIME_LIST})?)";
 
-        /// every [n] (days|weeks|months|years) (from [date]) (at [time])
-        public static readonly string SpecialExpr4 = @"(every( {AMOUNT})? ?{INTERVALUNIT_DATE}( (from)? {DATE_SPEC})?( {TIME_LIST})?)";
+        /// every [n] (days|weeks|months|years) (on [day of weeks]) (from [date]) (at [time])
+        public static readonly string SpecialExpr4 = @"(every( {AMOUNT})? ?{INTERVALUNIT_ALL}( (on )?{DAYOFWEEK_SPEC})?( (from )?{DATE_SPEC})?( {TIME_LIST})?)";
 
         #endregion
 

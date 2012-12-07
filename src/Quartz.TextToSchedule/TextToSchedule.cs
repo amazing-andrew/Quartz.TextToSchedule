@@ -378,28 +378,64 @@ namespace Quartz.TextToSchedule
             string intervalString = nameValueCollection["INTERVALUNIT"];
 
             var dateSpec = nameValueCollection["DATESPEC"];
+            var dayOfWeekSpecs = nameValueCollection.GetValues("DAYOFWEEK");
             var timesToFire = nameValueCollection.GetValues("TIME");
-
 
             DateTime? triggerStartTime = null;
 
             if (timesToFire == null) // if times are not specified assume midnight
                 timesToFire = new string[] { "00:00" };
 
-            foreach (var timeString in timesToFire)
+
+
+            if (dayOfWeekSpecs == null)
             {
-                if (dateSpec != null || timeString != null)
-                    triggerStartTime = GrammarHelper.GetDateTimeFromDateSpecAndTime(dateSpec, timeString);
+                foreach (var timeString in timesToFire)
+                {
+                    if (dateSpec != null || timeString != null)
+                        triggerStartTime = GrammarHelper.GetDateTimeFromDateSpecAndTime(dateSpec, timeString);
+                    else
+                        triggerStartTime = SystemTime.Now().DateTime;
 
-                TriggerBuilder triggerBuilder = TriggerBuilder.Create();
+                    TriggerBuilder triggerBuilder = TriggerBuilder.Create();
 
-                triggerBuilder.WithSchedule(CreateScheduleWithAmountAndIntervalUnit(amountString, intervalString, timeZone));
+                    triggerBuilder.WithSchedule(CreateScheduleWithAmountAndIntervalUnit(amountString, intervalString, timeZone));
 
-                //start on from time
-                if (triggerStartTime != null)
-                    triggerBuilder.StartAt(new DateTimeOffset(triggerStartTime.Value, timeZone.GetUtcOffset(triggerStartTime.Value)));
+                    //start on from time
+                    if (triggerStartTime != null)
+                        triggerBuilder.StartAt(new DateTimeOffset(triggerStartTime.Value, timeZone.GetUtcOffset(triggerStartTime.Value)));
 
-                results.Add(triggerBuilder, null);
+                    results.Add(triggerBuilder, null);
+                }
+            }
+            else
+            {
+                var dayOfWeeks = GrammarHelper.GetDayOfWeekValues(dayOfWeekSpecs);
+
+                foreach (var dayOfWeek in dayOfWeeks)
+                {
+                    foreach (var timeString in timesToFire)
+                    {
+                        if (dateSpec != null || timeString != null)
+                            triggerStartTime = GrammarHelper.GetDateTimeFromDateSpecAndTime(dateSpec, timeString);
+                        else
+                            triggerStartTime = SystemTime.Now().DateTime;
+
+                        //adjust the start time to the target day of week
+                        triggerStartTime = SeekForwardToNextDayOfWeek(triggerStartTime.Value, dayOfWeek);
+
+                        TriggerBuilder triggerBuilder = TriggerBuilder.Create();
+
+                        triggerBuilder.WithSchedule(CreateScheduleWithAmountAndIntervalUnit(amountString, intervalString, timeZone));
+
+                        //start on from time
+                        if (triggerStartTime != null)
+                            triggerBuilder.StartAt(new DateTimeOffset(triggerStartTime.Value, timeZone.GetUtcOffset(triggerStartTime.Value)));
+
+                        results.Add(triggerBuilder, null);
+                    }
+                }
+                
             }
         }
 
@@ -762,6 +798,20 @@ namespace Quartz.TextToSchedule
             CronScheduleBuilder sb = CronScheduleBuilder.CronSchedule(cronExpression);
             sb.InTimeZone(timeZone);
             return sb;
+        }
+
+        #endregion
+
+        #region Seek Methods
+
+        private DateTime SeekForwardToNextDayOfWeek(DateTime referenceDate, DayOfWeek targetDayOfWeek)
+        {
+            while (referenceDate.DayOfWeek != targetDayOfWeek)
+            {
+                referenceDate = referenceDate.AddDays(1);
+            }
+
+            return referenceDate;
         }
 
         #endregion
