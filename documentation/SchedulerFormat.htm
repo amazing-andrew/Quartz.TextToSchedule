@@ -84,19 +84,25 @@
 
     <pre>("every"|ordinal) (day of week) ["of" (month)] [times]</pre>
     <p>Where:</p>
-    <ul>
-        <li><i>ordinal</i> is an ordinal value of 1st, 2nd, 3rd, 4th, or 5th value. 
+    <dl>
+        <dt>ordinal</dt> 
+        <dd> is an ordinal value of 1st, 2nd, 3rd, 4th, or 5th value. 
             (You can also speicfy the full word such as <code>first</code> instead of <code>1st</code>.)
-        </li>
-        <li>
-            <i>day of week</i> 
+        </dd>
+        
+        <dt>day of week</dt> 
+        <dd>
             is a list or range of days of weeks.You can use the word <code>day</code> to mean all days of the week.
             (You may use <code>weekday</code> or <code>weekdays</code> to specifiy Monday-Friday. You may use <code>weekend</code> or <code>weekends</code> to specify sat,sun.)
-        </li>
-        <li><i>month</i> is a list or range of month names. (You can use the word <code>month</code> to specify all months).</li>
-        <li><i>times</i> is a single or multiple values of time of day, can be in 12 hour or 24 hour format
-            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm). You can also specify multiple times to fire by separating them with spaces and or commas.</li>
-    </ul>
+        </dd>
+
+        <dt>month</dt> 
+        <dd>is a list or range of month names. (You can use the word <code>month</code> to specify all months).</dd>
+
+        <dt>times</dt> 
+        <dd>is a single or multiple values of time of day, can be in 12 hour or 24 hour format
+            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm). You can also specify multiple times to fire by separating them with spaces and or commas.</dd>
+    </dl>
     <p>Examples:</p>
     <ul class="example">
         <li>every Friday at 6:30 am</li>
@@ -111,14 +117,19 @@
 
     <pre>["every"|on] (date) [times]</pre>
     <p>Where:</p>
-    <ul>
-        <li><i>date</i> 
+    <dl>
+        <dt>date</dt> 
+            <dd>
             is a date the is specified as a month then day, with the year as optional.
             (You can separate the date with or without commas. You may append a st,nd,rd, or th at the end of the day, such as <code>December 25th</code> or <code>December 3rd</code>.)
-        </li>
-        <li><i>times</i> is a single or multiple values of time of day, can be in 12 hour or 24 hour format
-            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm). You can also specify multiple times to fire by separating them with spaces and or commas.</li>
-    </ul>
+            </dd>
+
+        <dt>times</dt>
+        <dd>is a single or multiple values of time of day, can be in 12 hour or 24 hour format
+            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm). You can also specify multiple times to fire by separating them with spaces and or commas.
+
+        </dd>
+    </dl>
     <p>Examples:</p>
     <ul class="example">
         <li>on April 1st, at noon</li>
@@ -131,22 +142,28 @@
 	
 	<hr />
 	
-    <pre>"every" [n] (days|weeks|months|years) ("from" [date]) [times] </pre>
+    <pre>"every" [n] (sec|mins|hours|days|weeks|months|years) (&quot;on&quot; day of weeks) ("from" [date]) [times] </pre>
     <p>Where:</p>
-    <ul>
-		<li><i>N</i>
-             is a numeric amount
-        </li>
-        <li><i>(days|weeks|months|years)</i> 
-            you can use "day" or "days", "year" or "years"...
-        </li>
-        <li><i>date</i> 
-			this is the starting date for the expression. This is a date the is specified as a month then day, with the year as optional 
-            (You can separate the date with or without commas. You may append a st,nd,rd, or th at the end of the day, such as <code>December 25th</code> or <code>December 3rd</code>.)
-        </li>
-        <li><i>times</i> is a single or multiple values of time of day, can be in 12 hour or 24 hour format
-            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm). You can also specify multiple times to fire by separating them with spaces and or commas.</li>
-    </ul>
+    <dl>
+        <dt>N</dt>
+            <dd>is a numeric amount</dd>
+        
+        <dt>(sec|mins|hours|days|weeks|months|years)</dt>
+            <dd>you can use "day" or "days", "year" or "years"...</dd>
+        
+        <dt>day of weeks</dt>
+            <dd>is a list or range of days of weeks.
+            (You may use <code>weekday</code> or <code>weekdays</code> to specifiy Monday-Friday. You may use <code>weekend</code> or <code>weekends</code> to specify sat,sun.). NOTE: you should be careful of specifying a day of the week and not specifying a from <i>date</i> to reference when the next Monday is.</dd>
+
+        <dt>date</dt>
+            <dd>this is the starting date for the expression. This is a date the is specified as a month then day, with the year as optional 
+            (You can separate the date with or without commas. You may append a st,nd,rd, or th at the end of the day, such as <code>December 25th</code> or <code>December 3rd</code>.)</dd>
+
+        <dt>times</dt>
+            <dd>is a single or multiple values of time of day, can be in 12 hour or 24 hour format
+            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm). You can also specify multiple times to fire by separating them with spaces and or commas.</dd>
+    </dl>
+
     <p>Examples:</p>
     <ul class="example">
         <li>every 2 weeks at 08:00</li>
@@ -155,6 +172,8 @@
         <li>every 6 weeks</li>
         <li>every 2 months from February</li>
         <li>every 2 weeks at 6:00am and 7:30am</li>
+        <li>every 2 weeks on Monday at 4am</li>
+        <li>every 2 weeks on weekends from 12/8/2012 at 9am and 5pm</li>
     </ul>
     
 </body>
