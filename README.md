@@ -10,15 +10,18 @@ This is a library that is used to translate plain english into a schedule that c
 
 You can learn more about the plain english syntax by going here.
 
-https://github.com/amazing-andrew/AndrewSmith.Quartz.TextToSchedule/wiki/Scheduler-Format
-
-
-
 Quartz.Net Library
 
     http://quartznet.sourceforge.net 
     http://github.com/quartznet/quartznet 
 
+
+2. SCHEDULER FORMAT SYNTAX
+---------------------
+
+You can learn more about the scheduler format syntax by going to the following link
+
+*[Scheduler Format Documentation](http://htmlpreview.github.com/?https://github.com/amazing-andrew/AndrewSmith.Quartz.TextToSchedule/master/documentation/SchedulerFormat.htm)*
 
 
 2. LICENSE
