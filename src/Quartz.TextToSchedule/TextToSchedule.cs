@@ -387,18 +387,33 @@ namespace Quartz.TextToSchedule
                 timesToFire = new string[] { "00:00" };
 
 
-
-            if (dayOfWeekSpecs == null)
+            foreach (var timeString in timesToFire)
             {
-                foreach (var timeString in timesToFire)
+                if (dateSpec != null || timeString != null)
+                    triggerStartTime = GrammarHelper.GetDateTimeFromDateSpecAndTime(dateSpec, timeString);
+
+                if (dayOfWeekSpecs != null)
                 {
-                    if (dateSpec != null || timeString != null)
-                        triggerStartTime = GrammarHelper.GetDateTimeFromDateSpecAndTime(dateSpec, timeString);
-                    else
-                        triggerStartTime = SystemTime.Now().DateTime;
+                    var dayOfWeeks = GrammarHelper.GetDayOfWeekValues(dayOfWeekSpecs);
+                    foreach (var dayOfWeek in dayOfWeeks)
+                    {
+                        if (triggerStartTime == null)
+                            triggerStartTime = SystemTime.Now().DateTime;
 
+                        DateTime dowTriggerStartTime = triggerStartTime.Value;
+                        //seek
+                        dowTriggerStartTime = SeekForwardToNextDayOfWeek(dowTriggerStartTime, dayOfWeek);
+
+                        TriggerBuilder triggerBuilder = TriggerBuilder.Create();
+                        triggerBuilder.WithSchedule(CreateScheduleWithAmountAndIntervalUnit(amountString, intervalString, timeZone));
+                        triggerBuilder.StartAt(new DateTimeOffset(dowTriggerStartTime, timeZone.GetUtcOffset(dowTriggerStartTime)));
+
+                        results.Add(triggerBuilder, null);
+                    }
+                }
+                else
+                {
                     TriggerBuilder triggerBuilder = TriggerBuilder.Create();
-
                     triggerBuilder.WithSchedule(CreateScheduleWithAmountAndIntervalUnit(amountString, intervalString, timeZone));
 
                     //start on from time
@@ -407,35 +422,6 @@ namespace Quartz.TextToSchedule
 
                     results.Add(triggerBuilder, null);
                 }
-            }
-            else
-            {
-                var dayOfWeeks = GrammarHelper.GetDayOfWeekValues(dayOfWeekSpecs);
-
-                foreach (var dayOfWeek in dayOfWeeks)
-                {
-                    foreach (var timeString in timesToFire)
-                    {
-                        if (dateSpec != null || timeString != null)
-                            triggerStartTime = GrammarHelper.GetDateTimeFromDateSpecAndTime(dateSpec, timeString);
-                        else
-                            triggerStartTime = SystemTime.Now().DateTime;
-
-                        //adjust the start time to the target day of week
-                        triggerStartTime = SeekForwardToNextDayOfWeek(triggerStartTime.Value, dayOfWeek);
-
-                        TriggerBuilder triggerBuilder = TriggerBuilder.Create();
-
-                        triggerBuilder.WithSchedule(CreateScheduleWithAmountAndIntervalUnit(amountString, intervalString, timeZone));
-
-                        //start on from time
-                        if (triggerStartTime != null)
-                            triggerBuilder.StartAt(new DateTimeOffset(triggerStartTime.Value, timeZone.GetUtcOffset(triggerStartTime.Value)));
-
-                        results.Add(triggerBuilder, null);
-                    }
-                }
-                
             }
         }
 
