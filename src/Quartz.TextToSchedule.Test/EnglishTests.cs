@@ -233,5 +233,29 @@ namespace Quartz.TextToSchedule.Test
             TestHelper.AssertHasCronExpression(results, "0 0 16 ? JAN,FEB,DEC TUEL");
             TestHelper.AssertHasCronExpression(results, "0 0 16 ? JAN,FEB,DEC WEDL");
         }
+
+        [TestMethod]
+        public void EveryDayAt4pmAnd5pm()
+        {
+            string text = "every day at 4pm and 5pm";
+            var results = tts.Parse(text);
+
+            Assert.AreEqual(2, results.RegisterGroups.Count);
+
+            TestHelper.AssertHasCronExpression(results, "0 0 16 ? * *");
+            TestHelper.AssertHasCronExpression(results, "0 0 17 ? * *");
+        }
+
+        [TestMethod]
+        public void Every2ndMondayAt3am7am()
+        {
+            string text = "2nd Monday of month at 3am, 7am";
+            var results = tts.Parse(text);
+
+            Assert.AreEqual(2, results.RegisterGroups.Count);
+
+            TestHelper.AssertHasCronExpression(results, "0 0 3 ? * MON#2");
+            TestHelper.AssertHasCronExpression(results, "0 0 7 ? * MON#2");
+        }
     }
 }

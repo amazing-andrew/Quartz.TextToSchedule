@@ -49,7 +49,7 @@
     <p>Currently the schedule support 4 major formats.</p>
 
 
-    <pre>"every" [n] (sec|min|hour) ["on" weekdayspec] ["of" monthspec] [time]</pre>
+    <pre>"every" [n] (sec|min|hour) ["on" weekdayspec] ["of" monthspec] [time or range]</pre>
     <p>Where:</p>
     <ul>
         <li><i>N</i>
@@ -82,7 +82,7 @@
     <hr />
 
 
-    <pre>("every"|ordinal) (day of week) ["of" (month)] [time]</pre>
+    <pre>("every"|ordinal) (day of week) ["of" (month)] [times]</pre>
     <p>Where:</p>
     <ul>
         <li><i>ordinal</i> is an ordinal value of 1st, 2nd, 3rd, 4th, or 5th value. 
@@ -94,9 +94,8 @@
             (You may use <code>weekday</code> or <code>weekdays</code> to specifiy Monday-Friday. You may use <code>weekend</code> or <code>weekends</code> to specify sat,sun.)
         </li>
         <li><i>month</i> is a list or range of month names. (You can use the word <code>month</code> to specify all months).</li>
-        <li><i>time</i> is a single value specified as a time, can be in 12 hour or 24 hour format
-            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm)
-        </li>
+        <li><i>times</i> is a single or multiple values of time of day, can be in 12 hour or 24 hour format
+            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm). You can also specify multiple times to fire by separating them with spaces and or commas.</li>
     </ul>
     <p>Examples:</p>
     <ul class="example">
@@ -105,20 +104,20 @@
         <li>2nd,4th Friday of month at 17:00</li>
         <li>first and third Monday of Jan,Feb,Mar</li>
         <li>last day of month at 9:30 am</li>
+        <li>3rd Monday of April at 6:00 am and 7:35 pm</li>
     </ul>
 
     <hr />
 
-    <pre>["every"|on] (date) [time]</pre>
+    <pre>["every"|on] (date) [times]</pre>
     <p>Where:</p>
     <ul>
         <li><i>date</i> 
             is a date the is specified as a month then day, with the year as optional.
             (You can separate the date with or without commas. You may append a st,nd,rd, or th at the end of the day, such as <code>December 25th</code> or <code>December 3rd</code>.)
         </li>
-        <li><i>time</i> is a single value specified as a time, can be in 12 hour or 24 hour format
-            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm)
-        </li>
+        <li><i>times</i> is a single or multiple values of time of day, can be in 12 hour or 24 hour format
+            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm). You can also specify multiple times to fire by separating them with spaces and or commas.</li>
     </ul>
     <p>Examples:</p>
     <ul class="example">
@@ -127,11 +126,12 @@
         <li>May 5, 2020 at 4pm</li>
         <li>every Dec 3rd</li>
         <li>March 2nd at 3:30 pm</li>
+        <li>on May 5th at 5:35 AM and Noon</li>
     </ul>
 	
 	<hr />
 	
-    <pre>"every" [n] (days|weeks|months|years) ("from" [date]) [time] </pre>
+    <pre>"every" [n] (days|weeks|months|years) ("from" [date]) [times] </pre>
     <p>Where:</p>
     <ul>
 		<li><i>N</i>
@@ -144,9 +144,8 @@
 			this is the starting date for the expression. This is a date the is specified as a month then day, with the year as optional 
             (You can separate the date with or without commas. You may append a st,nd,rd, or th at the end of the day, such as <code>December 25th</code> or <code>December 3rd</code>.)
         </li>
-        <li><i>time</i> is a single value specified as a time, can be in 12 hour or 24 hour format
-            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm)
-        </li>
+        <li><i>times</i> is a single or multiple values of time of day, can be in 12 hour or 24 hour format
+            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm). You can also specify multiple times to fire by separating them with spaces and or commas.</li>
     </ul>
     <p>Examples:</p>
     <ul class="example">
@@ -155,6 +154,7 @@
         <li>every 2 yr from Sep 3 17:00</li>
         <li>every 6 weeks</li>
         <li>every 2 months from February</li>
+        <li>every 2 weeks at 6:00am and 7:30am</li>
     </ul>
     
 </body>
