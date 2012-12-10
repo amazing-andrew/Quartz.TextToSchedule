@@ -54,11 +54,13 @@
   <ItemGroup>
     <Compile Include="Calendars\LocalDailyCalendar.cs" />
     <Compile Include="Calendars\LocalWeeklyCalendar.cs" />
+    <Compile Include="CronTextToSchedule.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Grammars\EnglishGrammarHelper.cs" />
     <Compile Include="Grammars\IGrammar.cs" />
     <Compile Include="Grammars\IGrammarHelper.cs" />
     <Compile Include="ITextToSchedule.cs" />
+    <Compile Include="MultiTextToSchedule.cs" />
     <Compile Include="TextToScheduleExtensions.cs" />
     <Compile Include="Triggers\CustomCalendarIntervalScheduleBuilder.cs" />
     <Compile Include="Triggers\CustomCalendarIntervalTriggerImpl.cs" />

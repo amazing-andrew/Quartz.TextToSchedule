@@ -20,5 +20,25 @@ namespace Quartz.TextToSchedule
         {
             return new TextToSchedule(new EnglishGrammar(), new EnglishGrammarHelper());
         }
+
+        /// <summary>
+        /// Creates an <see cref="ITextToSchedule"/> that parses Quartz cron expressions.
+        /// </summary>
+        /// <returns></returns>
+        public ITextToSchedule CreateCronParser()
+        {
+            return new CronTextToSchedule();
+        }
+
+        /// <summary>
+        /// Creates the standard parser that can understand both English and Cron syntax.
+        /// </summary>
+        /// <returns></returns>
+        public ITextToSchedule CreateStandardParser()
+        {
+            return new MultiTextToSchedule(
+                CreateEnglishParser(),
+                CreateCronParser());
+        }
     }
 }

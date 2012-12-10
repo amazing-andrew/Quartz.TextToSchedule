@@ -85,18 +85,13 @@ namespace SchedulerExaminer
             var englishParser = parserFactory.CreateEnglishParser();
             var germanParser = parserFactory.CreateGermanParser();
 
-            string text = m.Input;
+            ITextToSchedule textToSchedule = new MultiTextToSchedule(
+                    parserFactory.CreateEnglishParser(),
+                    parserFactory.CreateGermanParser(),
+                    parserFactory.CreateCronParser());
 
-            if (englishParser.IsValid(text))
-                results = englishParser.Parse(text);
-            else if (germanParser.IsValid(text))
-                results = germanParser.Parse(text);
-            else if (CronExpression.IsValidExpression(text))
-            {
-                results = new TextToScheduleResults();
-                results.Add(TriggerBuilder.Create().WithCronSchedule(text, tb => tb.InTimeZone(m.TimeZone)));
-            }
-                            
+            string text = m.Input;
+            results = textToSchedule.Parse(text);
 
             if (results != null)
             {
