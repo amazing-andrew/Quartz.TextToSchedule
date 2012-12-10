@@ -383,9 +383,13 @@ namespace Quartz.TextToSchedule
 
             DateTime? triggerStartTime = null;
 
+            if (dayOfWeekSpecs != null && GrammarHelper.GetIntervalUnitValueFromString(intervalString) != IntervalUnit.Week)
+            {
+                throw new Exception("You should only specify a day of the week, when you are using the \"week\" time interval.");
+            }
+
             if (timesToFire == null) // if times are not specified assume midnight
                 timesToFire = new string[] { "00:00" };
-
 
             foreach (var timeString in timesToFire)
             {

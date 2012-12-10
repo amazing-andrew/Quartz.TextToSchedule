@@ -13,7 +13,7 @@ namespace Quartz.TextToSchedule.Grammars
     public class EnglishGrammar : IGrammar
     {
         //public static readonly string SPACE = @"\ ";
-        public static readonly string LIST_SEPARATOR = @"( ?, ?| ?; ?| ?\/ ?| ?\\ ?| ?\  ?|\ ?,?\ ?and\ ?)";
+        public static readonly string LIST_SEPARATOR = @"( ?, ?| ?; ?| ?\/ ?| ?\\ ?| ?\  ?|\ ?,?\ ?and\ ?|\ ?,?\ ?&\ ?)";
         public static readonly string RANGE_SEPARATOR = "( through | thru | ?- ?)";
         public static readonly string AMOUNT = @"(?<AMOUNT>\d+)";
 
@@ -25,10 +25,10 @@ namespace Quartz.TextToSchedule.Grammars
         public static readonly string INTERVALUNIT_MINUTE = "(m|min|mins|minute|minutes)";
         public static readonly string INTERVALUNIT_HOUR = "(h|hr|hrs|hour|hours)";
 
-        public static readonly string INTERVALUNIT_DAY = "(day|days)";
-        public static readonly string INTERVALUNIT_WEEK = "(week|weeks)";
-        public static readonly string INTERVALUNIT_MONTH = "(month|months|mth)";
-        public static readonly string INTERVALUNIT_YEAR = "(yr|year|years)";
+        public static readonly string INTERVALUNIT_DAY = "(d|day|days)";
+        public static readonly string INTERVALUNIT_WEEK = "(w|wk|week|weeks)";
+        public static readonly string INTERVALUNIT_MONTH = "(mn|month|months|mth)";
+        public static readonly string INTERVALUNIT_YEAR = "(y|yr|year|years)";
 
         public static readonly string INTERVALUNIT_TIME = RegexHelper.Builder_GroupOf("INTERVALUNIT", new string[] { INTERVALUNIT_SECOND, INTERVALUNIT_MINUTE, INTERVALUNIT_HOUR });
         public static readonly string INTERVALUNIT_DATE = RegexHelper.Builder_GroupOf("INTERVALUNIT", new string[] { INTERVALUNIT_DAY, INTERVALUNIT_WEEK, INTERVALUNIT_MONTH, INTERVALUNIT_YEAR });

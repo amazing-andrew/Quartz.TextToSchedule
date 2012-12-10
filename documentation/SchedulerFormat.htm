@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>TextToSchedule Scheduler Format</title>
+    <title>TextToSchedule Format</title>
 
     <style>
         .syntax
@@ -66,7 +66,7 @@
 </head>
 <body>
 
-    <h1>Scheduler Format</h1>
+    <h1>Quartz.TextToSchedule Scheduler Format</h1>
 
     <p>Currently the schedule support 4 major formats.</p>
 
@@ -215,13 +215,13 @@
             <dt>time interval</dt>
                 <dd>
                     <span class="required">required. </span> 
-                    specify seconds, minutes, hours, days, weeks, months, years
+                    specify either seconds, minutes, hours, days, weeks, months, or years
                 </dd>
         
             <dt>dayofweek</dt>
                 <dd>
-                    <span class="optional">optional.</span> a list or range of days of weeks.
-                    (You may use <code>weekday</code> or <code>weekdays</code> to specifiy Monday-Friday. You may use <code>weekend</code> or <code>weekends</code> to specify sat,sun.). NOTE: you should be careful of specifying a day of the week and not specifying a from <i>date</i> to reference when the next Monday is.
+                    <span class="optional">optional.</span> a list or range of days of weeks. You may only provide a dayofweek value when using the <code>week</code> interval.
+                    (You may use <code>weekday</code> or <code>weekdays</code> to specifiy Monday-Friday. You may use <code>weekend</code> or <code>weekends</code> to specify sat,sun.). 
                 </dd>
 
             <dt>date</dt>
@@ -229,7 +229,7 @@
                     <span class="optional">optional. </span>the starting date for the expression. This is a date the is specified as a month then day, with the year as optional 
                     (You can separate the date with or without commas. You may append a st,nd,rd, or th at the end of the day, such as <code>December 25th</code> or <code>December 3rd</code>.)
                     
-                    <p>NOTE: Although this field is optional, it is highly recommended because it gives the scheduler a reference date to start with; Otherwise it will assume 
+                    <p>NOTE: Although this field is optional, it is highly recommended to provide a full date including the year. This gives the scheduler a reference date to ensure that it lands on the days you want it to. Otherwise it will assume 
                     from the system time when it get's scheduled. For example, scheduling <code>every 2 weeks on Monday</code> will result in landing on different Mondays depending upon the system time. 
                         It is recommend that you schedule with <code>every 2 weeks on Monday from 10/1/2012</code>, which will always stay on the same set of Mondays.
                     </p>
