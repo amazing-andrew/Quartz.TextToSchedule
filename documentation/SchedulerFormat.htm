@@ -4,17 +4,31 @@
     <title>TextToSchedule Scheduler Format</title>
 
     <style>
-        pre
+        .syntax
         {
             border: solid 1px #bbb;
             padding: 5px;
             color: #070;
             font-size: 18px;
         }
+
+        .section h2
+        {
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
         code
         {
             font-family: 'Courier New', monospace;
             color: #900;
+        }
+
+        dt 
+        {
+            font-style: italic;
+            margin-top: 10px;
         }
 
         ul.example
@@ -30,10 +44,18 @@
             padding: 5px;
             margin: 0;
         }
-        hr
+        
+        .article
         {
-            margin-bottom: 50px;
+            border-bottom: 1px solid black;
+            margin-bottom: 75px;
         }
+
+        .optional, .required {
+            color: #999;
+            
+        }
+
 		body
 		{
 			width: 900px;
@@ -44,67 +66,95 @@
 </head>
 <body>
 
-    <h2>Scheduler Format</h2>
+    <h1>Scheduler Format</h1>
 
     <p>Currently the schedule support 4 major formats.</p>
 
+    <div class="article">
 
-    <pre>"every" [n] (sec|min|hour) ["on" weekdayspec] ["of" monthspec] [time or range]</pre>
-    <p>Where:</p>
-    <ul>
-        <li><i>N</i>
-             is a numeric amount
-        </li>
-        <li><i>(sec|min|hour)</i> 
+    <pre class="syntax">"every" [n] (sec|min|hour) ["on" weekdayspec] ["of" monthspec] [time or range]</pre>
+    
+    <div class="section">
+        <h2>Where</h2>
+
+        <dl>
+        <dt>N</dt>
+        <dd>
+             <span class="optional">optional.</span> a numeric amount
+        </dd>
+
+        <dt>(sec|min|hour)</dt> 
+        <dd>
+            <span class="required">required. </span> 
             you can use sec, second, seconds or just s.
-        </li>
-        <li>
-            <i>weekdayspec</i> 
+        </dd>
+
+
+        <dt>weekdayspec</dt> 
+        <dd>
+            <span class="optional">optional.</span> 
             specifies a list of the day of week names in full or abberviated. 
             (You may use <code>weekday</code> or <code>weekdays</code> to specifiy Monday-Friday. You may use <code>weekend</code> or <code>weekends</code> to specify sat,sun.)
-        </li>
-        <li><i>time</i>
-            is a single time or a time range. 
+        </dd>
+
+
+        <dt>time</dt>
+        <dd> 
+            <span class="optional">optional.</span> single time or a time range. 
             time ranges are specified using the <code>"from" (time) "to" (time)</code> clause. 
             (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm)
-        </li>
-    </ul>
-    <p>Examples:</p>
-    <ul class="example">
-        <li>every second</li>
-        <li>every 30 minutes</li>
-        <li>every 3 hours on Monday</li>
-        <li>every 30 seconds on Monday through Friday at 9:00 am</li>
-        <li>every 2 hours on Friday from 9:30 am to 5:30 pm</li>
-    </ul>
+        </dd>
+    </dl>
 
+    </div>
+    <div class="section">
+        <h2>Examples</h2>
 
-    <hr />
+        <ul class="example">
+            <li>every second</li>
+            <li>every 30 minutes</li>
+            <li>every 3 hours on Monday</li>
+            <li>every 30 seconds on Monday through Friday at 9:00 am</li>
+            <li>every 2 hours on Friday from 9:30 am to 5:30 pm</li>
+        </ul>
+    </div>
 
+    </div>
 
-    <pre>("every"|ordinal) (day of week) ["of" (month)] [times]</pre>
-    <p>Where:</p>
-    <dl>
+    <div class="article">
+    <pre class="syntax">("every"|ordinal) (day of week) ["of" (month)] [times]</pre>
+
+    <div class="section">
+        <h2>Where:</h2>
+
+        <dl>
         <dt>ordinal</dt> 
-        <dd> is an ordinal value of 1st, 2nd, 3rd, 4th, or 5th value. 
+        <dd>
+            <span class="required">required. </span>an ordinal value of 1st, 2nd, 3rd, 4th, or 5th value. 
             (You can also speicfy the full word such as <code>first</code> instead of <code>1st</code>.)
         </dd>
         
         <dt>day of week</dt> 
         <dd>
-            is a list or range of days of weeks.You can use the word <code>day</code> to mean all days of the week.
+            <span class="required">required. </span>a list or range of days of weeks.You can use the word <code>day</code> to mean all days of the week.
             (You may use <code>weekday</code> or <code>weekdays</code> to specifiy Monday-Friday. You may use <code>weekend</code> or <code>weekends</code> to specify sat,sun.)
         </dd>
 
         <dt>month</dt> 
-        <dd>is a list or range of month names. (You can use the word <code>month</code> to specify all months).</dd>
+        <dd>
+            <span class="optional">optional.</span> a list or range of month names. (You can use the word <code>month</code> to specify all months).
+        </dd>
 
         <dt>times</dt> 
-        <dd>is a single or multiple values of time of day, can be in 12 hour or 24 hour format
-            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm). You can also specify multiple times to fire by separating them with spaces and or commas.</dd>
+        <dd>
+            <span class="optional">optional.</span> single or multiple values of time of day, can be in 12 hour or 24 hour format
+            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm). You can also specify multiple times to fire by separating them with spaces and or commas.
+        </dd>
     </dl>
-    <p>Examples:</p>
-    <ul class="example">
+    </div>
+    <div class="section">
+        <h2>Examples:</h2>
+        <ul class="example">
         <li>every Friday at 6:30 am</li>
         <li>every mon,wed,fri at 9pm</li>
         <li>2nd,4th Friday of month at 17:00</li>
@@ -112,26 +162,34 @@
         <li>last day of month at 9:30 am</li>
         <li>3rd Monday of April at 6:00 am and 7:35 pm</li>
     </ul>
+    </div>
 
-    <hr />
+    </div>
 
-    <pre>["every"|on] (date) [times]</pre>
-    <p>Where:</p>
-    <dl>
+    <div class="article">
+    <pre class="syntax">["every"|on] (date) [times]</pre>
+
+    <div class="section">
+        <h2>Where:</h2>
+
+        <dl>
         <dt>date</dt> 
             <dd>
-            is a date the is specified as a month then day, with the year as optional.
-            (You can separate the date with or without commas. You may append a st,nd,rd, or th at the end of the day, such as <code>December 25th</code> or <code>December 3rd</code>.)
+                <span class="required">required. </span>a date the is specified as a month then day, with the year as optional.
+                (You can separate the date with or without commas. You may append a st,nd,rd, or th at the end of the day, such as <code>December 25th</code> or <code>December 3rd</code>.)
             </dd>
 
         <dt>times</dt>
-        <dd>is a single or multiple values of time of day, can be in 12 hour or 24 hour format
+        <dd>
+            <span class="optional">optional.</span> single or multiple values of time of day, can be in 12 hour or 24 hour format
             (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm). You can also specify multiple times to fire by separating them with spaces and or commas.
-
         </dd>
     </dl>
-    <p>Examples:</p>
-    <ul class="example">
+    </div>
+    <div class="section">
+        <h2>Examples:</h2>
+
+        <ul class="example">
         <li>on April 1st, at noon</li>
         <li>Jan 1st at midnight</li>
         <li>May 5, 2020 at 4pm</li>
@@ -139,33 +197,54 @@
         <li>March 2nd at 3:30 pm</li>
         <li>on May 5th at 5:35 AM and Noon</li>
     </ul>
-	
-	<hr />
-	
-    <pre>"every" [n] (sec|mins|hours|days|weeks|months|years) (&quot;on&quot; day of weeks) ("from" [date]) [times] </pre>
-    <p>Where:</p>
-    <dl>
-        <dt>N</dt>
-            <dd>is a numeric amount</dd>
+    </div>
+
+    </div>
+    
+    <div class="article">
+    <pre class="syntax">"every" [n] [time interval] (&quot;on&quot; [dayofweek]) ("from" [date]) [times] </pre>
+
+    <div class="section">
+        <h2>Where:</h2>
+        <dl>
+            <dt>N</dt>
+            <dd>
+                <span class="optional">optional.</span> a numeric amount
+            </dd>
         
-        <dt>(sec|mins|hours|days|weeks|months|years)</dt>
-            <dd>you can use "day" or "days", "year" or "years"...</dd>
+            <dt>time interval</dt>
+                <dd>
+                    <span class="required">required. </span> 
+                    specify seconds, minutes, hours, days, weeks, months, years
+                </dd>
         
-        <dt>day of weeks</dt>
-            <dd>is a list or range of days of weeks.
-            (You may use <code>weekday</code> or <code>weekdays</code> to specifiy Monday-Friday. You may use <code>weekend</code> or <code>weekends</code> to specify sat,sun.). NOTE: you should be careful of specifying a day of the week and not specifying a from <i>date</i> to reference when the next Monday is.</dd>
+            <dt>dayofweek</dt>
+                <dd>
+                    <span class="optional">optional.</span> a list or range of days of weeks.
+                    (You may use <code>weekday</code> or <code>weekdays</code> to specifiy Monday-Friday. You may use <code>weekend</code> or <code>weekends</code> to specify sat,sun.). NOTE: you should be careful of specifying a day of the week and not specifying a from <i>date</i> to reference when the next Monday is.
+                </dd>
 
-        <dt>date</dt>
-            <dd>this is the starting date for the expression. This is a date the is specified as a month then day, with the year as optional 
-            (You can separate the date with or without commas. You may append a st,nd,rd, or th at the end of the day, such as <code>December 25th</code> or <code>December 3rd</code>.)</dd>
+            <dt>date</dt>
+                <dd>
+                    <span class="optional">optional. </span>the starting date for the expression. This is a date the is specified as a month then day, with the year as optional 
+                    (You can separate the date with or without commas. You may append a st,nd,rd, or th at the end of the day, such as <code>December 25th</code> or <code>December 3rd</code>.)
+                    
+                    <p>NOTE: Although this field is optional, it is highly recommended because it gives the scheduler a reference date to start with; Otherwise it will assume 
+                    from the system time when it get's scheduled. For example, scheduling <code>every 2 weeks on Monday</code> will result in landing on different Mondays depending upon the system time. 
+                        It is recommend that you schedule with <code>every 2 weeks on Monday from 10/1/2012</code>, which will always stay on the same set of Mondays.
+                    </p>
+                </dd>
 
-        <dt>times</dt>
-            <dd>is a single or multiple values of time of day, can be in 12 hour or 24 hour format
-            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm). You can also specify multiple times to fire by separating them with spaces and or commas.</dd>
-    </dl>
-
-    <p>Examples:</p>
-    <ul class="example">
+            <dt>times</dt>
+                <dd>
+                    <span class="optional">optional.</span> single or multiple values of time of day, can be in 12 hour or 24 hour format
+                    (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm). You can also specify multiple times to fire by separating them with spaces and or commas.
+                </dd>
+        </dl>
+    </div>
+    <div class="section">
+        <h2>Examples:</h2>
+        <ul class="example">
         <li>every 2 weeks at 08:00</li>
         <li>every 3 days from Jan 3rd, 2012</li>
         <li>every 2 yr from Sep 3 17:00</li>
@@ -175,6 +254,10 @@
         <li>every 2 weeks on Monday at 4am</li>
         <li>every 2 weeks on weekends from 12/8/2012 at 9am and 5pm</li>
     </ul>
+    </div>
+
+    </div>
+    
     
 </body>
 </html>
