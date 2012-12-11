@@ -123,8 +123,9 @@ namespace Quartz.TextToSchedule.Grammars
         public static readonly string DATE_MONTH_NUMERIC = "(?<MONTH>(0?[1-9]|1[0-2]))";
         public static readonly string DATE2 = @"({DATE_MONTH_NUMERIC}/{DATE_DAY}(/{DATE_YEAR})?)";
 
-        public static readonly string DATE_SPEC = RegexHelper.Builder_GroupOf("DATESPEC", new string[] { DATE, DATE2 });
+        public static readonly string DATE3 = @"({DATE_DAY} of {MONTH}( ?,? {DATE_YEAR})?)";
 
+        public static readonly string DATE_SPEC = RegexHelper.Builder_GroupOf("DATESPEC", new string[] { DATE, DATE2, DATE3 });
         #endregion
 
 
