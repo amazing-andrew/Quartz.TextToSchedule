@@ -51,10 +51,16 @@
             margin-bottom: 75px;
         }
 
-        .optional, .required {
+        .optional {
             color: #999;
-            
+            font-style: italic;
         }
+
+        .required {
+            color: #900;
+            font-weight: bold;
+        }
+
 
         a {
             color: #3580D4;
@@ -84,11 +90,11 @@
 
     <h1>Quartz.TextToSchedule Scheduler Format</h1>
 
-    <p>Currently the schedule support 4 major formats.</p>
+    <p>Currently the schedule support 5 major formats.</p>
 
     <div class="article">
 
-    <pre class="syntax">"every" [n] (sec|min|hour) ["on" weekdayspec] ["of" monthspec] [time or range]</pre>
+    <pre class="syntax">"every" [n] (sec|min|hour) ("on" [day of week]) ("of" [month]) [time or range]</pre>
     
     <div class="section">
         <h2>Where</h2>
@@ -106,16 +112,21 @@
         </dd>
 
 
-        <dt>weekdayspec</dt> 
+        <dt>day of week</dt> 
         <dd>
             <span class="optional">optional.</span> 
             specifies a list of the day of week names in full or abbreviated. (You may use <code>weekday</code> or <code>weekdays</code> to specify Monday-Friday. You may use <code>weekend</code> or <code>weekends</code> to specify sat,sun.)
             You may use <a href="#appendix-list">lists</a> or <a href="#appendix-range">ranges</a>.
-            
+        </dd>
+
+        <dt>month</dt> 
+        <dd>
+            <span class="optional">optional.</span> 
+            can be a combination of single, <a href="#appendix-list">list</a>, or <a href="#appendix-range">range</a> of month names.(You can use the word <code>month</code> to specify all months).
         </dd>
 
 
-        <dt>time</dt>
+        <dt>time or range</dt>
         <dd> 
             <span class="optional">optional.</span> a single time or a <a href="#appendix-time-range">time range</a>. see <a href="#appendix-time-format">time format</a> on how to specify a single time value.
         </dd>
@@ -128,8 +139,8 @@
         <ul class="example">
             <li>every second</li>
             <li>every 30 minutes</li>
-            <li>every 3 hours on Monday</li>
             <li>every 36 hours</li>
+            <li>every 12 hours on Monday at 9am</li>
             <li>every 30 minutes on Friday from 9:00 AM to 5:30 PM</li>
         </ul>
     </div>
@@ -137,7 +148,7 @@
     </div>
 
     <div class="article">
-    <pre class="syntax">("every"|ordinal) (day of week) ["of" (month)] [times]</pre>
+    <pre class="syntax">("every"|[ordinal]) [day of week] ("of" [month]) [times]</pre>
 
     <div class="section">
         <h2>Where:</h2>
@@ -187,7 +198,9 @@
     </div>
 
     <div class="article">
-    <pre class="syntax">["every"|on] (date) [times]</pre>
+    <pre class="syntax">["every"|"on"] [date] [times]</pre>
+
+        <p class="optional">the word "every" is optional for this format.</p>
 
     <div class="section">
         <h2>Where:</h2>
@@ -220,7 +233,7 @@
     </div>
     
     <div class="article">
-    <pre class="syntax">"every" [n] [time interval] (&quot;on&quot; [dayofweek]) ("from" [date]) [times] </pre>
+    <pre class="syntax">"every" [n] [time interval] ("on" [day of week]) ("from" [date]) [times] </pre>
 
     <div class="section">
         <h2>Where:</h2>
@@ -236,7 +249,7 @@
                     specify either seconds, minutes, hours, days, weeks, months, or years. You may use abbreviations of any of these.
                 </dd>
         
-            <dt>dayofweek</dt>
+            <dt>day of week</dt>
                 <dd>
                     <span class="optional">optional.</span> a list or range of days of weeks. You may only provide a dayofweek value when using the <code>week</code> interval.
                     (You may use <code>weekday</code> or <code>weekdays</code> to specifiy Monday-Friday. You may use <code>weekend</code> or <code>weekends</code> to specify sat,sun.). 
@@ -271,6 +284,47 @@
         <li>every 2 weeks on Monday at 4am</li>
         <li>every 2 weeks on weekends from 12/8/2012 at 9am and 5pm</li>
     </ul>
+    </div>
+
+    </div>
+
+    <div class="article">
+    <pre class="syntax">"every" [day of month] "day" ("of" [month]) [times]</pre>
+    
+        <p class="optional">the word "every" is optional for this format.</p>
+
+    <div class="section">
+        <h2>Where:</h2>
+        <dl>
+            <dt>day of month</dt>
+            <dd>
+                <span class="required">required.</span> a single or <a href="#appendix-list">list</a> of numeric days of the month to run on. Such as the <code>1st</code>, <code>10th</code> or <code>15th</code> day of month.
+                <p>You may also append a "st", "nd", "rd", or "th" at the end of the day.</p>
+                <p>specifying the word "day" afterwards is also optional.</p>
+            </dd>
+        
+             <dt>month</dt> 
+            <dd>
+                <span class="optional">optional.</span> 
+                can be a combination of single, <a href="#appendix-list">list</a>, or <a href="#appendix-range">range</a> of month names.(You can use the word <code>month</code> to specify all months).
+            </dd>
+
+            <dt>times</dt>
+                <dd>
+                    <span class="optional">optional.</span> single or multiple values of time of day to fire on. see <a href="#appendix-time-format">time format</a>.
+                </dd>
+        </dl>
+    </div>
+    <div class="section">
+        <h2>Examples:</h2>
+        <ul class="example">
+            <li>every 10th day of month</li>
+            <li>every 10th day of month at 6:30 AM</li>
+            <li>15th of month at 4:30:30 PM</li>
+            <li>15th of January, May, and September at 8:00 AM</li>
+            <li>1st day of Feb through Sept</li>
+            <li>1st, 10th, and 20th day of month at 8am and 8pm</li>
+        </ul>
     </div>
 
     </div>
@@ -349,7 +403,7 @@
 
             <p>The Year is always optional.</p>
             <p>Note that you may specify a date with or without commas.</p>
-            <p>You may also append a st,nd,rd, or th at the end of the day.</p>
+            <p>You may also append a "st", "nd", "rd", or "th" at the end of the day.</p>
 
             <div class="section">
                 <h2>Examples:</h2>
