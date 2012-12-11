@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace Quartz.TextToSchedule
 {
+    /// <summary>
+    /// An <see cref="ITextToSchedule"/> that supports cron expressions.
+    /// </summary>
     public class CronTextToSchedule : ITextToSchedule
     {
         private static readonly string[] Delimiters = new string[] { ",", ";" };

@@ -31,7 +31,7 @@ namespace Quartz.TextToSchedule
         }
 
         /// <summary>
-        /// Creates the standard parser that can understand both English and Cron syntax.
+        /// Creates the standard parser that parses both English and Cron syntax.
         /// </summary>
         /// <returns></returns>
         public ITextToSchedule CreateStandardParser()

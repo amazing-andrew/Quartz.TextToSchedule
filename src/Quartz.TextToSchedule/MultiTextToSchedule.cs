@@ -6,6 +6,10 @@ using System.Text;
 
 namespace Quartz.TextToSchedule
 {
+    /// <summary>
+    /// Creates a <see cref="ITextToSchedule"/> that checks multiple <see cref="ITextToSchedule"/>. 
+    /// This is a good way to allow for multiple types of input from a single instance.
+    /// </summary>
     public class MultiTextToSchedule : ITextToSchedule
     {
         public IList<ITextToSchedule> Parsers { get; private set; }

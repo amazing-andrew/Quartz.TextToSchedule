@@ -16,7 +16,7 @@ using Quartz.TextToSchedule.Util;
 namespace Quartz.TextToSchedule
 {
     /// <summary>
-    /// Default Impl of an <see cref="ITextToSchedule" />
+    /// Default Impl of an <see cref="ITextToSchedule" />.
     /// </summary>
     public class TextToSchedule : ITextToSchedule
     {
