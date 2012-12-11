@@ -19,6 +19,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{F1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleApp", "src\ExampleApp\ExampleApp.csproj", "{936AB2C1-D3F2-4E5A-850A-0B00DF121DDA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{5646410D-51FE-45B1-9D43-B4B5E79E9CFE}"
+	ProjectSection(SolutionItems) = preProject
+		documentation\SchedulerFormat.htm = documentation\SchedulerFormat.htm
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

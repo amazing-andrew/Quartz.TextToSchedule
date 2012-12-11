@@ -40,6 +40,9 @@ namespace Quartz.TextToSchedule
         /// </returns>
         public bool IsValid(string text)
         {
+            if (text == null || text.Trim() == "")
+                return false;
+
             foreach (var item in Parsers)
             {
                 if (item.IsValid(text))

@@ -56,6 +56,22 @@
             
         }
 
+        a {
+            color: #3580D4;
+            text-decoration: none;
+            font-size: 0.80em;
+        }
+
+        a:hover {
+            color: #004faa;
+        }
+
+        #appendix > .section {
+            border-bottom: 1px solid black;
+            margin-top: 25px;
+
+        }
+
 		body
 		{
 			width: 900px;
@@ -86,23 +102,22 @@
         <dt>(sec|min|hour)</dt> 
         <dd>
             <span class="required">required. </span> 
-            you can use sec, second, seconds or just s.
+            used to specify seconds, minutes, or hours. You may use abbreviations of any of these.
         </dd>
 
 
         <dt>weekdayspec</dt> 
         <dd>
             <span class="optional">optional.</span> 
-            specifies a list of the day of week names in full or abberviated. 
-            (You may use <code>weekday</code> or <code>weekdays</code> to specifiy Monday-Friday. You may use <code>weekend</code> or <code>weekends</code> to specify sat,sun.)
+            specifies a list of the day of week names in full or abbreviated. (You may use <code>weekday</code> or <code>weekdays</code> to specify Monday-Friday. You may use <code>weekend</code> or <code>weekends</code> to specify sat,sun.)
+            You may use <a href="#appendix-list">lists</a> or <a href="#appendix-range">ranges</a>.
+            
         </dd>
 
 
         <dt>time</dt>
         <dd> 
-            <span class="optional">optional.</span> single time or a time range. 
-            time ranges are specified using the <code>"from" (time) "to" (time)</code> clause. 
-            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm)
+            <span class="optional">optional.</span> a single time or a <a href="#appendix-time-range">time range</a>. see <a href="#appendix-time-format">time format</a> on how to specify a single time value.
         </dd>
     </dl>
 
@@ -114,8 +129,8 @@
             <li>every second</li>
             <li>every 30 minutes</li>
             <li>every 3 hours on Monday</li>
-            <li>every 30 seconds on Monday through Friday at 9:00 am</li>
-            <li>every 2 hours on Friday from 9:30 am to 5:30 pm</li>
+            <li>every 36 hours</li>
+            <li>every 30 minutes on Friday from 9:00 AM to 5:30 PM</li>
         </ul>
     </div>
 
@@ -130,25 +145,30 @@
         <dl>
         <dt>ordinal</dt> 
         <dd>
-            <span class="required">required. </span>an ordinal value of 1st, 2nd, 3rd, 4th, or 5th value. 
+            <span class="required">required. </span>
+            an ordinal value of "1st", "2nd", "3rd", "4th", "5th", or "last" value. 
             (You can also speicfy the full word such as <code>first</code> instead of <code>1st</code>.)
+            You may use <a href="#appendix-list">lists</a>.
         </dd>
         
         <dt>day of week</dt> 
         <dd>
-            <span class="required">required. </span>a list or range of days of weeks.You can use the word <code>day</code> to mean all days of the week.
+            <span class="required">required. </span>
+            a list or range of days of weeks.You can use the word <code>day</code> to mean all days of the week.
             (You may use <code>weekday</code> or <code>weekdays</code> to specifiy Monday-Friday. You may use <code>weekend</code> or <code>weekends</code> to specify sat,sun.)
+            You may use <a href="#appendix-list">lists</a> or <a href="#appendix-range">ranges</a>.
         </dd>
 
         <dt>month</dt> 
         <dd>
-            <span class="optional">optional.</span> a list or range of month names. (You can use the word <code>month</code> to specify all months).
+            <span class="optional">optional.</span> 
+            can be a combination of single, <a href="#appendix-list">list</a>, or <a href="#appendix-range">range</a> of month names.(You can use the word <code>month</code> to specify all months).
         </dd>
 
         <dt>times</dt> 
         <dd>
-            <span class="optional">optional.</span> single or multiple values of time of day, can be in 12 hour or 24 hour format
-            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm). You can also specify multiple times to fire by separating them with spaces and or commas.
+            <span class="optional">optional.</span> 
+            single or multiple values of time of day to fire on. see <a href="#appendix-time-format">time format</a>.
         </dd>
     </dl>
     </div>
@@ -175,14 +195,12 @@
         <dl>
         <dt>date</dt> 
             <dd>
-                <span class="required">required. </span>a date the is specified as a month then day, with the year as optional.
-                (You can separate the date with or without commas. You may append a st,nd,rd, or th at the end of the day, such as <code>December 25th</code> or <code>December 3rd</code>.)
+                <span class="required">required. </span>a date to fire on. see <a href="#appendix-date-format">date format</a>.
             </dd>
 
         <dt>times</dt>
         <dd>
-            <span class="optional">optional.</span> single or multiple values of time of day, can be in 12 hour or 24 hour format
-            (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm). You can also specify multiple times to fire by separating them with spaces and or commas.
+            <span class="optional">optional.</span> single or multiple values of time of day to fire on. see <a href="#appendix-time-format">time format</a>.
         </dd>
     </dl>
     </div>
@@ -194,7 +212,7 @@
         <li>Jan 1st at midnight</li>
         <li>May 5, 2020 at 4pm</li>
         <li>every Dec 3rd</li>
-        <li>March 2nd at 3:30 pm</li>
+        <li>March 2nd 3:30 pm</li>
         <li>on May 5th at 5:35 AM and Noon</li>
     </ul>
     </div>
@@ -215,7 +233,7 @@
             <dt>time interval</dt>
                 <dd>
                     <span class="required">required. </span> 
-                    specify either seconds, minutes, hours, days, weeks, months, or years
+                    specify either seconds, minutes, hours, days, weeks, months, or years. You may use abbreviations of any of these.
                 </dd>
         
             <dt>dayofweek</dt>
@@ -226,8 +244,8 @@
 
             <dt>date</dt>
                 <dd>
-                    <span class="optional">optional. </span>the starting date for the expression. This is a date the is specified as a month then day, with the year as optional 
-                    (You can separate the date with or without commas. You may append a st,nd,rd, or th at the end of the day, such as <code>December 25th</code> or <code>December 3rd</code>.)
+                    <span class="optional">optional. </span>
+                    a date to fire on. see <a href="#appendix-date-format">date format</a>.
                     
                     <p>NOTE: Although this field is optional, it is highly recommended to provide a full date including the year. This gives the scheduler a reference date to ensure that it lands on the days you want it to. Otherwise it will assume 
                     from the system time when it get's scheduled. For example, scheduling <code>every 2 weeks on Monday</code> will result in landing on different Mondays depending upon the system time. 
@@ -237,8 +255,7 @@
 
             <dt>times</dt>
                 <dd>
-                    <span class="optional">optional.</span> single or multiple values of time of day, can be in 12 hour or 24 hour format
-                    (You may use 24 hour or 12 hour formats. You may specify <code>midnight</code> for 00:00 or <code>noon</code> to specify 12:00 pm). You can also specify multiple times to fire by separating them with spaces and or commas.
+                    <span class="optional">optional.</span> single or multiple values of time of day to fire on. see <a href="#appendix-time-format">time format</a>.
                 </dd>
         </dl>
     </div>
@@ -258,6 +275,136 @@
 
     </div>
     
-    
+    <div id="appendix" class="article">
+        <h2>Appendix</h2>
+
+        <div id="appendix-time-format" class="section">
+            <h2>Time Format</h2>
+
+            <p>You may specify the time in either 12 Hour or 24 Hour format.</p>
+
+            <pre class="syntax">HOUR:MINUTE:SECOND (AM/PM)</pre>
+
+            <p>The Minutes & Seconds fields are optional.</p>
+            <p>You may choose to separate the fields with spaces instead of the colons.</p>
+            <p>You may choose to leave out the space before the (AM/PM).</p>
+            <p>You may choose to prepend the word "at" before the time.</p>
+
+            <h2>Special Values</h2>
+            <p>You may choose to use the word <code>Midnight</code> to specify <code>00:00</code></p>
+            <p>You may choose to use the word <code>Noon</code> to specify <code>12:00</code></p>
+
+            <div class="section">
+                <h2>Examples:</h2>
+                <ul class="example">
+                    <li>06:30</li>
+                    <li>17:30:45</li>
+                    <li>at 5pm</li>
+                    <li>6 30 am</li>
+                    <li>Noon</li>
+                    <li>at midnight</li>
+                </ul>
+            </div>
+
+            <p>Most expressions allow multiple times of day to fire on.</p>
+            <p>You can separate the list of times to fire with a comma ",", space " ", the word "and" or "&".</p>
+
+            <div class="section">
+                <h2>Examples:</h2>
+                <ul class="example">
+                    <li>6am, 9am, and Noon</li>
+                    <li>09:00 & 17:00</li>
+                    <li>5pm</li>
+                    <li>6:30 AM</li>
+                    <li>6 30 am</li>
+                </ul>
+            </div>
+
+            <div id="appendix-time-range" class="section">
+                <h2>Time Range</h2>
+
+                <p>Time ranges are specified using the <code>"from" (time) "to" (time)</code> clause.</p>
+
+                 <div class="section">
+                    <h2>Examples:</h2>
+                    <ul class="example">
+                        <li>from 9am to 5pm</li>
+                        <li>from 7:30am to 3:00pm</li>
+                        <li>from 10pm to 2am</li>
+                        <li>from 4:35 AM to 7:35 AM</li>
+                        <li>from 09:30:45 to 17:30:45</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="appendix-date-format" class="section">
+            <h2>Date Format</h2>
+
+            <p>You may specify a date in three different formats</p>
+
+            <pre class="syntax">MONTH/DAY/YEAR</pre>
+            <pre class="syntax">DAY "of" MONTH, YEAR</pre>
+            <pre class="syntax">MONTH DAY, YEAR</pre>
+
+            <p>The Year is always optional.</p>
+            <p>Note that you may specify a date with or without commas.</p>
+            <p>You may also append a st,nd,rd, or th at the end of the day.</p>
+
+            <div class="section">
+                <h2>Examples:</h2>
+                <ul class="example">
+                    <li>1/5/2011</li>
+                    <li>4th of July</li>
+                    <li>8 of June, 2015</li>
+                    <li>August 3rd</li>
+                    <li>Sept 10, 2018</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div id="appendix-list-range" class="section">
+            <h2>List or Ranges of Values</h2>
+
+            <p>some fields you can specify a list or a range of values.</p>
+
+            <div id="appendix-list" class="section">
+                <h2>List of Values</h2>
+
+                <p>You can specify a list of values by separating them with commas, semi-colons, spaces, or the word "and"</p>
+
+                <div class="section">
+                    <h2>Examples:</h2>
+                    <ul class="example">
+                        <li>Monday and Friday</li>
+                        <li>Monday, Wednesday, and Friday</li>
+                        <li>09:00, 17:00</li>
+                        <li>Jan,Feb, and Mar</li>
+                        <li>September November December</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="appendix-range" class="section">
+                <h2>Range of Values</h2>
+
+                <p>You can specify a range of values by separating the ranges with a hyphen "-", or the word "through" or "thru"</p>
+
+                <div class="section">
+                    <h2>Examples:</h2>
+                    <ul class="example">
+                        <li>Monday - Wednesday</li>
+                        <li>Jan-July</li>
+                        <li>Monday through Friday</li>
+                        <li>December-February</li>
+                        <li>Sun thru Tue</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 </body>
 </html>

@@ -36,6 +36,9 @@ namespace Quartz.TextToSchedule
         /// </returns>
         public bool IsValid(string text)
         {
+            if (text == null || text.Trim() == "")
+                return false;
+
             var expressions = Prepare(text);
 
             foreach (var exp in expressions)
