@@ -104,7 +104,7 @@ namespace Quartz.TextToSchedule.Util
         public static string Builder_ListOf(string regex, string LIST_SEPARATOR)
         {
             var list = regex + "(" + LIST_SEPARATOR + regex + ")*";
-            return list;
+            return "(" + list + ")";
         }
 
         /// <summary>

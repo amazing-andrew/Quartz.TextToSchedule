@@ -72,9 +72,11 @@ namespace Quartz.TextToSchedule.Grammars
         public static readonly string DECEMBER = "(dec|december)";
 
         public static readonly string MONTH_ONE = RegexHelper.Builder_GroupOf(new string[] { JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER });
+
         public static readonly string MONTH_RANGE = RegexHelper.Builder_Range(MONTH_ONE, RANGE_SEPARATOR);
         public static readonly string MONTH = RegexHelper.Builder_GroupOf("MONTH", new string[] { MONTH_ONE, MONTH_RANGE });
 
+        public static readonly string MONTH_SINGLE = RegexHelper.Builder_Capture("MONTH", MONTH_ONE);
         public static readonly string MONTH_SPEC = RegexHelper.Builder_ListOf(MONTH, LIST_SEPARATOR);
 
         #endregion
@@ -108,7 +110,7 @@ namespace Quartz.TextToSchedule.Grammars
 
         public static readonly string TIME_ONCE = "((at )?{TIME})";
         public static readonly string TIME_RANGE = "((from (?<FROMTIME>{TIME}) to (?<TOTIME>{TIME}))|(between (?<FROMTIME>{TIME}) and (?<TOTIME>{TIME})))";
-        public static readonly string TIME_SPEC = RegexHelper.Builder_GroupOf("TIMESPEC", new string[] { TIME_ONCE, TIME_RANGE });
+        public static readonly string TIME_ONCE_OR_RANGE = RegexHelper.Builder_GroupOf("TIMEONCEORRANGE", new string[] { TIME_ONCE, TIME_RANGE });
 
         public static readonly string TIME_LIST = "((at )?" + RegexHelper.Builder_ListOf("{TIME}", LIST_SEPARATOR) + ")";
 
@@ -117,13 +119,15 @@ namespace Quartz.TextToSchedule.Grammars
         #region Patterns - DATE
 
         public static readonly string DATE_DAY = @"(?<DAY>(0?[1-9])|(1[0-9])|(2[0-9])|(3[0-3]))(st|nd|rd|th)?";
+        public static readonly string DATE_DAY_LIST = RegexHelper.Builder_ListOf(DATE_DAY, LIST_SEPARATOR);
+
         public static readonly string DATE_YEAR = @"(?<YEAR>\d\d(\d\d)?)";
-        public static readonly string DATE = @"({MONTH}( ?,? ?{DATE_DAY})?( ?,? {DATE_YEAR})?)";
+        public static readonly string DATE = @"({MONTH_SINGLE}( ?,? ?{DATE_DAY})?( ?,? {DATE_YEAR})?)";
 
         public static readonly string DATE_MONTH_NUMERIC = "(?<MONTH>(0?[1-9]|1[0-2]))";
         public static readonly string DATE2 = @"({DATE_MONTH_NUMERIC}/{DATE_DAY}(/{DATE_YEAR})?)";
 
-        public static readonly string DATE3 = @"({DATE_DAY} of {MONTH}( ?,? {DATE_YEAR})?)";
+        public static readonly string DATE3 = @"({DATE_DAY} of {MONTH_SINGLE}( ?,? {DATE_YEAR})?)";
 
         public static readonly string DATE_SPEC = RegexHelper.Builder_GroupOf("DATESPEC", new string[] { DATE, DATE2, DATE3 });
         #endregion
@@ -195,16 +199,20 @@ namespace Quartz.TextToSchedule.Grammars
         #region Expressions
 
         //every [n] (sec|min|hour) [on mon-fri] [of monthspec] [time]
-        public static readonly string SpecialExpr1 = @"(every( {AMOUNT})? ?{INTERVALUNIT_TIME}( on {DAYOFWEEK_SPEC})?( of {MONTH_SPEC})?( {TIME_SPEC})?)";
+        public static readonly string SpecialExpr1 = @"(every( {AMOUNT})? ?{INTERVALUNIT_TIME}( on {DAYOFWEEK_SPEC})?( of {MONTH_SPEC})?( {TIME_ONCE_OR_RANGE})?)";
 
         //(every|ordinal) (day of week) [of (month)] [time]
-        public static readonly string SpecialExpr2 = @"((every|{ORDINAL})( (day|{DAYOFWEEK_SPEC}))( of (month|{MONTH_SPEC}))?( {TIME_LIST})?)";
+        public static readonly string SpecialExpr2 = @"((every|{ORDINAL})( (day|{DAYOFWEEK_SPEC}))( of (month|({MONTH_SPEC})))?( {TIME_LIST})?)";
 
         //[every|on] (date) [time]
         public static readonly string SpecialExpr3 = @"(((every|on) )?{DATE_SPEC}( {TIME_LIST})?)";
 
-        /// every [n] (days|weeks|months|years) (on [day of weeks]) (from [date]) (at [time])
+        // every [n] (days|weeks|months|years) (on [day of weeks]) (from [date]) (at [time])
         public static readonly string SpecialExpr4 = @"(every( {AMOUNT})? ?{INTERVALUNIT_ALL}( (on )?{DAYOFWEEK_SPEC})?( (from )?{DATE_SPEC})?( {TIME_LIST})?)";
+
+        // every [n] day of (month) [time]
+        public static readonly string SpecialExpr5 = @"(((every|on) )?{DATE_DAY_LIST}( day)?(( of)? (month|({MONTH_SPEC})))?( {TIME_LIST})?)";
+
 
         #endregion
 
@@ -238,6 +246,14 @@ namespace Quartz.TextToSchedule.Grammars
         public string Expression4
         {
             get { return SpecialExpr4; }
+        }
+
+        /// <summary>
+        /// every [n] day of (month) [time]
+        /// </summary>
+        public string Expression5
+        {
+            get { return SpecialExpr5; }
         }
     }
 }

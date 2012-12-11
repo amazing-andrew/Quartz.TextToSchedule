@@ -66,6 +66,10 @@ namespace Quartz.TextToSchedule
             try
             {
                 var results = Parse(text);
+
+                if (results == null)
+                    return false;
+
                 return (results.RegisterGroups.Count > 0);
             }
             catch
@@ -112,6 +116,10 @@ namespace Quartz.TextToSchedule
                 matched = true;
             }
             else if (ExecuteMatch(Grammar.Expression4, text, timeZone, results, Expression4Handler))
+            {
+                matched = true;
+            }
+            else if (ExecuteMatch(Grammar.Expression5, text, timeZone, results, Expression5Handler))
             {
                 matched = true;
             }
@@ -426,6 +434,67 @@ namespace Quartz.TextToSchedule
 
                     results.Add(triggerBuilder, null);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Handles with a given text matches the Expression5 field.
+        /// </summary>
+        /// <param name="nameValueCollection">A collection of values from the named capture groups.</param>
+        /// <param name="results">The results.</param>
+        private void Expression5Handler(NameValueCollection nameValueCollection, TimeZoneInfo timeZone, TextToScheduleResults results)
+        {
+            var days = nameValueCollection.GetValues("DAY");
+            var months = nameValueCollection.GetValues("MONTH");
+            var timesToFire = nameValueCollection.GetValues("TIME");
+
+            var dayValues = days.Select(day => GrammarHelper.GetDayValue(day))
+                .Select(day => GetDayCronValue(day).ToList());
+
+            List<string> cronExpressions = new List<string>();
+            
+            string cron_day = "*";
+            string cron_month = "*";
+
+            if (days != null)
+            {
+                var targetDays = days.Select(x => GrammarHelper.GetDayValue(x));
+                var targetDayCron = targetDays.Select(x => GetDayCronValue(x));
+                cron_day = string.Join(",", targetDayCron);
+            }
+
+            if (months != null)
+            {
+                var targetMonths = GrammarHelper.GetMonthValues(months);
+                var targetMonthsCron = targetMonths.Select(x => GetMonthCronValue(x));
+                cron_month = string.Join(",", targetMonthsCron);                    
+            }
+
+            if (timesToFire == null) // if times are not specified assume midnight
+                timesToFire = new string[] { "00:00" };
+
+            foreach (var item in timesToFire)
+            {
+                var time = GrammarHelper.GetTimeFromTimeString(item).Value;
+
+                string cron_sec = time.Second.ToString();
+                string cron_min = time.Minute.ToString();
+                string cron_hour = time.Hour.ToString();
+
+                string cronString = string.Format("{0} {1} {2} {3} {4} ?",
+                    cron_sec, cron_min, cron_hour, cron_day, cron_month);
+                
+                cronExpressions.Add(cronString);
+            }
+
+            foreach (var cron in cronExpressions)
+            {
+                var triggerBuilder = TriggerBuilder.Create();
+
+                IScheduleBuilder schedule = CreateScheduleWithCron(cron, timeZone);
+                triggerBuilder.WithSchedule(schedule);
+
+                results.Add(triggerBuilder);
             }
         }
 

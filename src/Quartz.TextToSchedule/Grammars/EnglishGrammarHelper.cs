@@ -23,11 +23,21 @@ namespace Quartz.TextToSchedule.Grammars
         {
             //normalize the string
             text = text.ToLower().Trim();
-            text = NormalizeExtraSpaces(text);
             text = ReplaceSpecialStrings(text);
             text = NormalizeDayOfWeekAndMonthNames(text);
             text = NormalizeRangedValues(text);
+            text = ReplaceNoiseWords(text);
+            text = NormalizeExtraSpaces(text);
             return text;
+        }
+
+        private string ReplaceNoiseWords(string s)
+        {
+            s = Regex.Replace(s, @"\bthe\b", "");
+            s = Regex.Replace(s, @"\ba\b", "");
+            s = Regex.Replace(s, @"\ball\b", "every");
+            s = Regex.Replace(s, @"\balso\b", "and");
+            return s;
         }
 
         private string ReplaceSpecialStrings(string s)
@@ -76,7 +86,7 @@ namespace Quartz.TextToSchedule.Grammars
         }
         private string NormalizeExtraSpaces(string s)
         {
-            return Regex.Replace(s, "\\ +", " ");
+            return Regex.Replace(s, "\\ +", " ").Trim();
         }
 
         #endregion
@@ -296,16 +306,26 @@ namespace Quartz.TextToSchedule.Grammars
 
             if (iEnd < iStart)
             {
-                int i = iStart;
-
-                while (i != iEnd + 1)
+                if (iEnd + 1 == iStart)
                 {
-                    DayOfWeek dow = (DayOfWeek)i;
-                    results.Add(dow);
+                    for (int i = 0; i <= 6; i++)
+                    {
+                        results.Add((DayOfWeek)i);
+                    }
+                }
+                else
+                {
+                    int i = iStart;
 
-                    i++;
-                    if (i >= 7)
-                        i = i - 7;
+                    while (i != iEnd + 1)
+                    {
+                        DayOfWeek dow = (DayOfWeek)i;
+                        results.Add(dow);
+
+                        i++;
+                        if (i >= 7)
+                            i = i - 7;
+                    }
                 }
             }
             else
@@ -364,15 +384,25 @@ namespace Quartz.TextToSchedule.Grammars
 
             if (iEnd < iStart)
             {
-                int i = iStart;
-
-                while (i != iEnd + 1)
+                if (iEnd + 1 == iStart)
                 {
-                    results.Add(i);
+                    for (int i = 1; i < maxMonths + 1; i++)
+                    {
+                        results.Add(i);
+                    }
+                }
+                else
+                {
+                    int i = iStart;
 
-                    i++;
-                    if (i >= maxMonths)
-                        i = i - maxMonths;
+                    while (i != iEnd + 1)
+                    {
+                        results.Add(i);
+
+                        i++;
+                        if (i > maxMonths)
+                            i = i - maxMonths;
+                    }
                 }
             }
             else

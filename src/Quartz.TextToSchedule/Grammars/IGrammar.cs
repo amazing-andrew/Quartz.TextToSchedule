@@ -31,5 +31,10 @@ namespace Quartz.TextToSchedule.Grammars
         /// every [n] (days|weeks|months|years) (from [date]) (at [time])
         /// </summary>
         string Expression4 { get; }
+
+        /// <summary>
+        /// every [n] day of (month) [time]
+        /// </summary>
+        string Expression5 { get; }
     }
 }

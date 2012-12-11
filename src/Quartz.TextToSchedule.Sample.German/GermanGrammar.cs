@@ -183,5 +183,11 @@ namespace Quartz.TextToSchedule.Grammars
         {
             get { return SpecialExpr4; }
         }
+
+
+        public string Expression5
+        {
+            get { return "notimplemented"; }
+        }
     }
 }
