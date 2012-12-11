@@ -42,8 +42,8 @@ namespace Quartz.TextToSchedule.Grammars
 
         private string ReplaceSpecialStrings(string s)
         {
-            s = Regex.Replace(s, @"\bnoon\b", "12:00 p.m.");
-            s = Regex.Replace(s, @"\bmidnight\b", "00:00 a.m.");
+            s = Regex.Replace(s, @"\bnoon\b", "12:00");
+            s = Regex.Replace(s, @"\bmidnight\b", "00:00");
             s = Regex.Replace(s, @"\bweekdays?\b", "mon-fri");
             s = Regex.Replace(s, @"\bweekends?\b", "sat,sun");
 

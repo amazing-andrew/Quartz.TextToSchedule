@@ -128,7 +128,6 @@ namespace Quartz.TextToSchedule.Test
             Assert.AreEqual(trigger.StartTimeUtc, date);
         }
 
-
         private static T FindCalendarOfType<T>(RegisterGroup group) where T : ICalendar
         {
             bool found = false;
