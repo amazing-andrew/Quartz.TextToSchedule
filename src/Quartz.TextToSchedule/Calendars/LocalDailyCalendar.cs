@@ -17,8 +17,6 @@
 */
 #endregion
 
-#if CUSTOM
-
 using Quartz.TextToSchedule.Util;
 using Quartz;
 using Quartz.Impl.Calendar;
@@ -911,5 +909,3 @@ namespace Quartz.TextToSchedule.Calendars
         }
     }
 }
-
-#endif

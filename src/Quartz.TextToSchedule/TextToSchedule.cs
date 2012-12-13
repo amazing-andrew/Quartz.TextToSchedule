@@ -1,7 +1,4 @@
-﻿#if CUSTOM
-using Quartz.TextToSchedule.Calendars;
-using Quartz.TextToSchedule.Triggers;
-#endif
+﻿using Quartz.TextToSchedule.Calendars;
 using Quartz.TextToSchedule.Grammars;
 using Quartz;
 using Quartz.Impl.Calendar;
@@ -536,21 +533,12 @@ namespace Quartz.TextToSchedule
         private ICalendar BuildCalendarOnDayOfWeek(ICalendar baseCalendar, string[] dayofWeekSpecs, TimeZoneInfo timeZone)
         {
             //create calendar and exclude all days
-#if CUSTOM
-            LocalWeeklyCalendar calendar = null;
-
-            if (baseCalendar != null)
-                calendar = new LocalWeeklyCalendar(baseCalendar);
-            else
-                calendar = new LocalWeeklyCalendar();
-#else
             WeeklyCalendar calendar = null;
 
             if (baseCalendar != null)
                 calendar = new WeeklyCalendar(baseCalendar);
             else
                 calendar = new WeeklyCalendar();
-#endif
 
             calendar.DaysExcluded = new bool[7] { true, true, true, true, true, true, true };
 
@@ -603,7 +591,6 @@ namespace Quartz.TextToSchedule
                 shouldInvertTimeRange = true; //turn this into an inclusive range
             }
 
-#if CUSTOM
             LocalDailyCalendar calendar = null;
             if (baseCalendar != null)
                 calendar = new LocalDailyCalendar(baseCalendar, fromTime, toTime);
@@ -611,15 +598,6 @@ namespace Quartz.TextToSchedule
                 calendar = new LocalDailyCalendar(fromTime, toTime);
 
             calendar.InvertTimeRange = shouldInvertTimeRange;
-#else
-            DailyCalendar calendar = null;
-            if (baseCalendar != null)
-                calendar = new DailyCalendar(baseCalendar, fromTime, toTime);
-            else
-                calendar = new DailyCalendar(fromTime, toTime);
-
-            calendar.InvertTimeRange = shouldInvertTimeRange;
-#endif
 
             calendar.TimeZone = timeZone;
             return calendar;

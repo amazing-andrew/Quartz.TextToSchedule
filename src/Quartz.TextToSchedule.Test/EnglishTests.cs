@@ -3,9 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quartz.TextToSchedule;
 using Quartz;
 using Quartz.Impl.Calendar;
-#if CUSTOM
 using Quartz.TextToSchedule.Calendars;
-#endif
 
 namespace Quartz.TextToSchedule.Test
 {

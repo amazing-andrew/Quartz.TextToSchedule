@@ -7,9 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quartz;
 using Quartz.Impl.Calendar;
 using Quartz.Spi;
-#if CUSTOM
 using Quartz.TextToSchedule.Calendars;
-#endif
 
 namespace Quartz.TextToSchedule.Test
 {
@@ -50,12 +48,7 @@ namespace Quartz.TextToSchedule.Test
 
         public static void AssertWeeklyCalendarHasDayIncluded(RegisterGroup group, DayOfWeek includedDay)
         {
-
-#if CUSTOM
-            var weeklyCalendar = FindCalendarOfType<LocalWeeklyCalendar>(group);
-#else
             var weeklyCalendar = FindCalendarOfType<WeeklyCalendar>(group);
-#endif
 
             Assert.IsTrue(!weeklyCalendar.IsDayExcluded(includedDay),
                 "day of week of {0} was expected to be included in the calendar but wasn't.",
@@ -63,12 +56,8 @@ namespace Quartz.TextToSchedule.Test
         }
         public static void AssertWeeklyCalendarHasDayExcluded(RegisterGroup group, DayOfWeek includedDay)
         {
-
-#if CUSTOM
-            var weeklyCalendar = FindCalendarOfType<LocalWeeklyCalendar>(group);
-#else
             var weeklyCalendar = FindCalendarOfType<WeeklyCalendar>(group);
-#endif
+
             Assert.IsTrue(weeklyCalendar.IsDayExcluded(includedDay),
                 "day of week of {0} was expected to be excluded in the calendar but wasn't.",
                 includedDay);
@@ -82,11 +71,8 @@ namespace Quartz.TextToSchedule.Test
 
             date = date.ToUniversalTime();
 
-#if CUSTOM
             var dailyCal = FindCalendarOfType<LocalDailyCalendar>(group);
-#else
-            var dailyCal = FindCalendarOfType<DailyCalendar>(group);
-#endif
+
             Assert.IsTrue(dailyCal.IsTimeIncluded(date), "{0} as expected to be included in the daily calendar but wasn't", date);
         }
         public static void AssertDailyCalendarIsTimeExcluded(RegisterGroup group, int hour, int minute, int sec)
@@ -97,11 +83,8 @@ namespace Quartz.TextToSchedule.Test
 
             date = date.ToUniversalTime();
 
-#if CUSTOM
             var dailyCal = FindCalendarOfType<LocalDailyCalendar>(group);
-#else
-            var dailyCal = FindCalendarOfType<DailyCalendar>(group);
-#endif
+
             Assert.IsFalse(dailyCal.IsTimeIncluded(date), "{0} as expected to be excluded in the daily calendar but wasn't", date);
         }
 
