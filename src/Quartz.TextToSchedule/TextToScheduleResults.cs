@@ -99,8 +99,10 @@ namespace Quartz.TextToSchedule
                 List<ITrigger> triggers = new List<ITrigger>();
                 RegisterGroups.ForEach(x => triggers.Add(x.TriggerBuilder.Build()));
 
-                var dic = new Dictionary<IJobDetail, IList<ITrigger>>();
-                dic.Add(jobDetail, triggers);
+                var dic = new Dictionary<Quartz.IJobDetail, Quartz.Collection.ISet<ITrigger>>();
+                Quartz.Collection.ISet<ITrigger> set = new Collection.HashSet<ITrigger>(triggers);
+                dic.Add(jobDetail, set);
+               
                 sched.ScheduleJobs(dic, true);
             }
             else if (RegisterGroups.Count == 1)

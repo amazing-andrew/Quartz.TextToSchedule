@@ -91,7 +91,7 @@ namespace SchedulerExaminer
                     parserFactory.CreateCronParser());
 
             string text = m.Input;
-            results = textToSchedule.Parse(text);
+            results = textToSchedule.Parse(text, m.TimeZone);
 
             if (results != null)
             {

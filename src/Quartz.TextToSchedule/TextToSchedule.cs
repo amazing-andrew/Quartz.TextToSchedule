@@ -838,11 +838,8 @@ namespace Quartz.TextToSchedule
 
             if (amountString != null)
                 amount = GrammarHelper.GetAmountValueFromString(amountString);
-#if CUSTOM
-            CustomCalendarIntervalScheduleBuilder b = CustomCalendarIntervalScheduleBuilder.Create();
-#else
+
             CalendarIntervalScheduleBuilder b = CalendarIntervalScheduleBuilder.Create();
-#endif
 
             b.WithInterval(amount, intervalUnit);
 
