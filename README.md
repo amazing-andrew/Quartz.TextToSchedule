@@ -1,4 +1,4 @@
-AndrewSmith.Quartz.TextToSchedule
+Quartz.TextToSchedule
 -----------------------------------------------------------------
 
 1. INTRODUCTION
