@@ -4,11 +4,11 @@ Quartz.TextToSchedule
 1. INTRODUCTION
 ----------------
 
-This is the README file for AndrewSmith.Quartz.TextToSchedule.
+Hello and welcome to a small pet project I have.
 
 This is a library that is used to translate plain english into a schedule that can be used by Quartz.Net.
 
-You can learn more about the plain english syntax by going here.
+You can learn more about the plain english syntax by going [here](http://htmlpreview.github.io/?https://github.com/amazing-andrew/Quartz.TextToSchedule/blob/master/documentation/SchedulerFormat.htm).
 
 Quartz.Net Library
 
@@ -21,7 +21,7 @@ Quartz.Net Library
 
 You can learn more about the scheduler format syntax by going to the following link
 
-*[Scheduler Format Documentation](http://htmlpreview.github.com/?https://github.com/amazing-andrew/AndrewSmith.Quartz.TextToSchedule/master/documentation/SchedulerFormat.htm)*
+*[Scheduler Format Documentation](http://htmlpreview.github.io/?https://github.com/amazing-andrew/Quartz.TextToSchedule/blob/master/documentation/SchedulerFormat.htm)*
 
 
 2. LICENSE
